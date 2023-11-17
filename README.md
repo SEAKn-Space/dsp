@@ -22,4 +22,4 @@ For the most part most interactin with the SDRs is done through the use of GNU R
 
 To install GNU Radio, download instructions can be found [here](https://wiki.gnuradio.org/index.php/InstallingGR).
 
-
+To install all needed python library dependencies run `pip install -r requirements.txt`. 
