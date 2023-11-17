@@ -20,6 +20,6 @@ For the most part most interactin with the SDRs is done through the use of GNU R
 
 ### GNU Radio Download and Other Dependencies
 
-To install GNU Radio the instructions can be found [here](https://wiki.gnuradio.org/index.php/InstallingGR).
+To install GNU Radio, download instructions can be found [here](https://wiki.gnuradio.org/index.php/InstallingGR).
 
 
