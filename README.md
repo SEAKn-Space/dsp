@@ -12,11 +12,11 @@ The AI model currently uses a Convolution Neural Network (CNN) to determine the 
 
 ## SDR files
 
-For this project two SDRs were used. A HackRF One is used to tranmit the modulated signal while a RTL-SDR is used as a receiver to collect the transmitted data to feed into the AI model. 
+For this project two SDRs were used. A HackRF One is used to transmit the modulated signal while a RTL-SDR is used as a receiver to collect the transmitted data to feed into the AI model. 
 
 Some pre and post processing will be neccesary to allow the model to chose the appropriate modulation scheme and then begin demodulation. *Current work in progress*
 
-For the most part most interactin with the SDRs is done through the use of GNU Radio and the outputted python scripts. Within the SDR folder two sub-folders can be found. The RX_TX files are designed to work on the aforementioned SDRs to actually send (TX) and receive (RX) the modulated signals. The RX_TX_simulation folder contains the same GNU Radio files but can be simulated on the computer to transmit and recieve without using any SDRs.
+For the most part, most interactin with the SDRs is done through the use of GNU Radio and their associated python scripts. Within the SDR folder two sub-folders can be found. The RX_TX files are designed to work on the aforementioned SDRs to actually send (TX) and receive (RX) the modulated signals. The RX_TX_simulation folder contains the same GNU Radio files but can be simulated on the computer to transmit and recieve without using any SDRs.
 
 ### GNU Radio Download and Other Dependencies
 
