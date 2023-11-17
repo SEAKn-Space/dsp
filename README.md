@@ -1,6 +1,6 @@
 # SEAKn Space DSP Repository
 
-Containing in this repo are several files involved and used in the Digital Signal Proccessing (DSP) side of the project.
+Containing in this repo are several files involved and used in the Digital Signal Proccessing (DSP) side of our Capston Design project.
 
 Within this realm you can find source files for both our AI model and interacting with the Software Defined Radios (SDRs).
 
