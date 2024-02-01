@@ -8,9 +8,8 @@
 # Title: bpsk_tx
 # Author: Barry Duggan
 # Description: packet transmit
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import blocks
@@ -57,10 +56,9 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "bpsk_tx")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -72,15 +70,16 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 48000
+        self.samp_rate = samp_rate = 50e3
         self.access_key = access_key = '11100001010110101110100010010011'
-        self.usrp_rate = usrp_rate = 768000
-        self.sps = sps = 4
-        self.rs_ratio = rs_ratio = 1.040
-        self.low_pass_filter_taps = low_pass_filter_taps = firdes.low_pass(1.0, samp_rate, 20000,2000, window.WIN_HAMMING, 6.76)
+        self.usrp_rate = usrp_rate = 10e6
+        self.sps = sps = 20
+        self.rs_ratio = rs_ratio = 1
+        self.low_pass_filter_taps = low_pass_filter_taps = firdes.low_pass(1.0, samp_rate, 10e3,2000, window.WIN_HAMMING, 6.76)
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.excess_bw = excess_bw = 0.35
         self.bpsk = bpsk = digital.constellation_bpsk().base()
+        self.bpsk.set_npwr(1.0)
 
         ##################################################
         # Blocks
@@ -190,6 +189,90 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 3):
             self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_freq_sink_x_0_0_0 = qtgui.freq_sink_c(
+            1024, #size
+            window.WIN_BLACKMAN_hARRIS, #wintype
+            0, #fc
+            samp_rate, #bw
+            "Filtered Modulated Signal", #name
+            1,
+            None # parent
+        )
+        self.qtgui_freq_sink_x_0_0_0.set_update_time(0.10)
+        self.qtgui_freq_sink_x_0_0_0.set_y_axis((-140), 10)
+        self.qtgui_freq_sink_x_0_0_0.set_y_label('Relative Gain', 'dB')
+        self.qtgui_freq_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
+        self.qtgui_freq_sink_x_0_0_0.enable_autoscale(False)
+        self.qtgui_freq_sink_x_0_0_0.enable_grid(False)
+        self.qtgui_freq_sink_x_0_0_0.set_fft_average(1.0)
+        self.qtgui_freq_sink_x_0_0_0.enable_axis_labels(True)
+        self.qtgui_freq_sink_x_0_0_0.enable_control_panel(False)
+        self.qtgui_freq_sink_x_0_0_0.set_fft_window_normalized(False)
+
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_freq_sink_x_0_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_freq_sink_x_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_freq_sink_x_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_freq_sink_x_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_freq_sink_x_0_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_freq_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0_0_0.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_freq_sink_x_0_0_0_win)
+        self.qtgui_freq_sink_x_0_0 = qtgui.freq_sink_c(
+            1024, #size
+            window.WIN_BLACKMAN_hARRIS, #wintype
+            0, #fc
+            samp_rate, #bw
+            "Modulated Signal", #name
+            1,
+            None # parent
+        )
+        self.qtgui_freq_sink_x_0_0.set_update_time(0.10)
+        self.qtgui_freq_sink_x_0_0.set_y_axis((-140), 10)
+        self.qtgui_freq_sink_x_0_0.set_y_label('Relative Gain', 'dB')
+        self.qtgui_freq_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
+        self.qtgui_freq_sink_x_0_0.enable_autoscale(False)
+        self.qtgui_freq_sink_x_0_0.enable_grid(False)
+        self.qtgui_freq_sink_x_0_0.set_fft_average(1.0)
+        self.qtgui_freq_sink_x_0_0.enable_axis_labels(True)
+        self.qtgui_freq_sink_x_0_0.enable_control_panel(False)
+        self.qtgui_freq_sink_x_0_0.set_fft_window_normalized(False)
+
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_freq_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_freq_sink_x_0_0.set_line_label(i, labels[i])
+            self.qtgui_freq_sink_x_0_0.set_line_width(i, widths[i])
+            self.qtgui_freq_sink_x_0_0.set_line_color(i, colors[i])
+            self.qtgui_freq_sink_x_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_freq_sink_x_0_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0_0.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_freq_sink_x_0_0_win)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             1024, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -264,11 +347,13 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_throttle2_0_0, 0), (self.zeromq_pub_sink_0, 0))
         self.connect((self.blocks_uchar_to_float_0_0_0_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.digital_constellation_modulator_0, 0), (self.fft_filter_xxx_0_0_0, 0))
+        self.connect((self.digital_constellation_modulator_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_tagged_stream_mux_0, 1))
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
         self.connect((self.epy_block_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.fft_filter_xxx_0_0_0, 0), (self.mmse_resampler_xx_0, 0))
+        self.connect((self.fft_filter_xxx_0_0_0, 0), (self.qtgui_freq_sink_x_0_0_0, 0))
         self.connect((self.mmse_resampler_xx_0, 0), (self.blocks_throttle2_0_0, 0))
 
 
@@ -291,9 +376,11 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.set_low_pass_filter_taps(firdes.low_pass(1.0, self.samp_rate, 20000, 2000, window.WIN_HAMMING, 6.76))
+        self.set_low_pass_filter_taps(firdes.low_pass(1.0, self.samp_rate, 10e3, 2000, window.WIN_HAMMING, 6.76))
         self.mmse_resampler_xx_0.set_resamp_ratio((1.0/((self.usrp_rate/self.samp_rate)*self.rs_ratio)))
         self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
+        self.qtgui_freq_sink_x_0_0.set_frequency_range(0, self.samp_rate)
+        self.qtgui_freq_sink_x_0_0_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_1.set_samp_rate(self.samp_rate)
 
@@ -365,9 +452,6 @@ def main(top_block_cls=bpsk_tx, options=None):
     if options is None:
         options = argument_parser().parse_args()
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls(InFile=options.InFile)

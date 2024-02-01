@@ -52,6 +52,7 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -93,7 +94,7 @@ blocks:
   parameters:
     beta: '6.76'
     comment: ''
-    cutoff_freq: '20000'
+    cutoff_freq: 10e3
     gain: '1.0'
     samp_rate: samp_rate
     value: ''
@@ -110,7 +111,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1.040'
+    value: '1'
   states:
     bus_sink: false
     bus_source: false
@@ -122,7 +123,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '48000'
+    value: 50e3
   states:
     bus_sink: false
     bus_source: false
@@ -134,7 +135,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '4'
+    value: '20'
   states:
     bus_sink: false
     bus_source: false
@@ -146,7 +147,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '768000'
+    value: 10e6
   states:
     bus_sink: false
     bus_source: false
@@ -188,7 +189,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [200, 532.0]
+    coordinate: [224, 604.0]
     rotation: 0
     state: true
 - name: blocks_tagged_stream_mux_0
@@ -229,7 +230,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 388.0]
+    coordinate: [1032, 388.0]
     rotation: 0
     state: true
 - name: blocks_uchar_to_float_0_0_0_0
@@ -244,7 +245,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [408, 544.0]
+    coordinate: [432, 624.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0
@@ -412,9 +413,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 348.0]
+    coordinate: [472, 348.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: mmse_resampler_xx_0
   id: mmse_resampler_xx
   parameters:
@@ -430,9 +431,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [688, 368.0]
+    coordinate: [776, 352.0]
     rotation: 0
-    state: true
+    state: enabled
+- name: mmse_resampler_xx_0_0
+  id: mmse_resampler_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    phase_shift: '0'
+    resamp_ratio: 1.0/((usrp_rate/samp_rate)*rs_ratio)
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1408, 584.0]
+    rotation: 0
+    state: disabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -512,6 +531,168 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1120, 600.0]
+    rotation: 0
+    state: true
+- name: qtgui_freq_sink_x_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Modulated Signal"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [376, 468.0]
+    rotation: 0
+    state: true
+- name: qtgui_freq_sink_x_0_0_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Filtered Modulated Signal"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 468.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -608,7 +789,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 516.0]
+    coordinate: [600, 588.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1
@@ -718,7 +899,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1304, 204.0]
+    coordinate: [1360, 216.0]
     rotation: 0
     state: true
 - name: virtual_source_0
@@ -753,7 +934,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 364.0]
+    coordinate: [1272, 360.0]
     rotation: 0
     state: true
 
@@ -765,15 +946,17 @@ connections:
 - [blocks_throttle2_0_0, '0', zeromq_pub_sink_0, '0']
 - [blocks_uchar_to_float_0_0_0_0, '0', qtgui_time_sink_x_0, '0']
 - [digital_constellation_modulator_0, '0', fft_filter_xxx_0_0_0, '0']
+- [digital_constellation_modulator_0, '0', qtgui_freq_sink_x_0_0, '0']
 - [digital_crc32_bb_0, '0', blocks_tagged_stream_mux_0, '1']
 - [digital_crc32_bb_0, '0', digital_protocol_formatter_bb_0, '0']
 - [digital_protocol_formatter_bb_0, '0', blocks_tagged_stream_mux_0, '0']
 - [epy_block_0, '0', digital_crc32_bb_0, '0']
 - [fft_filter_xxx_0_0_0, '0', mmse_resampler_xx_0, '0']
+- [fft_filter_xxx_0_0_0, '0', qtgui_freq_sink_x_0_0_0, '0']
 - [mmse_resampler_xx_0, '0', blocks_throttle2_0_0, '0']
 - [virtual_source_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [virtual_source_0, '0', digital_constellation_modulator_0, '0']
 
 metadata:
   file_format: 1
-  grc_version: 3.10.7.0
+  grc_version: 3.10.8.0
