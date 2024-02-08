@@ -81,7 +81,7 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
         self.excess_bw = excess_bw = 0.35
         self.bpsk = bpsk = digital.constellation_bpsk().base()
         self.bpsk.set_npwr(1.0)
-        self.baseband_LO = baseband_LO = 20e3
+        self.baseband_LO = baseband_LO = 0e3
 
         ##################################################
         # Blocks
