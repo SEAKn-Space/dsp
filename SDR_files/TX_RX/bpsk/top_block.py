@@ -571,7 +571,7 @@ class top_block(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0 = epy_block_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test2.png", Pkt_len=packet_len)
+        self.epy_block_0 = epy_block_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test2.png", Pkt_len=packet_len, initial_packet_fill=30)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_pfb_clock_sync_xxx_0 = digital.pfb_clock_sync_ccf(sps, .062, rrc_taps, nfilts, (nfilts/2), 1.5, 1)
         self.digital_map_bb_0 = digital.map_bb([0,1])

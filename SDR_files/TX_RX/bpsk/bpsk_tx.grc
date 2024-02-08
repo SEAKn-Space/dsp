@@ -365,21 +365,21 @@ blocks:
       import os.path\nimport sys\nimport base64\nimport math\n\n\"\"\"\nState definitions\n\
       \    0   idle\n    1   send preamble\n    2   send file data\n    3   send file\
       \ name\n    4   send post filler\n\"\"\"\n\nclass blk(gr.sync_block):\n    def\
-      \ __init__(self, FileName='None', Pkt_len=52):\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='EPB: File Source to Tagged Stream',\n\
-      \            in_sig=None,\n            out_sig=[np.uint8])\n        self.FileName\
-      \ = FileName\n        self.Pkt_len = Pkt_len\n        self.state = 0      #\
-      \ idle state\n        self.pre_count = 0\n        self.indx = 0\n        self._debug\
-      \ = 0     # debug\n        self.data = \"\"\n\n        if (os.path.exists(self.FileName)):\n\
-      \            # open input file\n            self.f_in = open (self.FileName,\
-      \ 'rb')\n            self._eof = False\n            if (self._debug):\n    \
-      \            print (\"File name:\", self.FileName)\n            self.state =\
-      \ 1\n        else:\n            print(self.FileName, 'does not exist')\n   \
-      \         self._eof = True\n            self.state = 0\n\n        self.char_list\
-      \ = [37,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
-      \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,93]\n        self.c_len\
-      \ = len (self.char_list)\n        # print (self.c_len)\n        self.filler\
-      \ = [37,85,85,85, 35,69,79,70, 85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ __init__(self, FileName='None', Pkt_len=52, initial_packet_fill=1):\n    \
+      \    gr.sync_block.__init__(\n            self,\n            name='EPB: File\
+      \ Source to Tagged Stream',\n            in_sig=None,\n            out_sig=[np.uint8])\n\
+      \        self.FileName = FileName\n        self.Pkt_len = Pkt_len\n        self.initial_packet_fill\
+      \ = initial_packet_fill\n        self.state = 0      # idle state\n        self.pre_count\
+      \ = 0\n        self.indx = 0\n        self._debug = 0     # debug\n        self.data\
+      \ = \"\"\n\n        if (os.path.exists(self.FileName)):\n            # open\
+      \ input file\n            self.f_in = open (self.FileName, 'rb')\n         \
+      \   self._eof = False\n            if (self._debug):\n                print\
+      \ (\"File name:\", self.FileName)\n            self.state = 1\n        else:\n\
+      \            print(self.FileName, 'does not exist')\n            self._eof =\
+      \ True\n            self.state = 0\n\n        self.char_list = [37,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ 85,85,85,93]\n        self.c_len = len (self.char_list)\n        # print (self.c_len)\n\
+      \        self.filler = [37,85,85,85, 35,69,79,70, 85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
       \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,93]\n        self.f_len\
       \ = len (self.filler)\n\n    def work(self, input_items, output_items):\n\n\
       \        # Attempt at fixing buffer overflow\n        if(len(output_items[0])<(int(math.ceil(self.Pkt_len*8/6)))):\n\
@@ -394,7 +394,7 @@ blocks:
       \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
       \                key1,   # Key of the tag\n                val1    # Value of\
       \ the tag\n                )\n            self.indx += self.c_len\n        \
-      \    \n            i = 0\n            j = 0\n            while(j<10*self.c_len):\n\
+      \    \n            i = 0\n            j = 0\n            while(j<self.initial_packet_fill*self.c_len):\n\
       \                i = 0\n                while (i < self.c_len):\n          \
       \          output_items[0][j] = self.char_list[i]\n                    i +=\
       \ 1\n                    j += 1\n                \n                self.pre_count\
@@ -454,11 +454,13 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
+    initial_packet_fill: ''
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     _io_cache: '(''EPB: File Source to Tagged Stream'', ''blk'', [(''FileName'', "''None''"),
-      (''Pkt_len'', ''52'')], [], [(''0'', ''byte'', 1)], '''', [''FileName'', ''Pkt_len''])'
+      (''Pkt_len'', ''52''), (''initial_packet_fill'', ''1'')], [], [(''0'', ''byte'',
+      1)], '''', [''FileName'', ''Pkt_len'', ''initial_packet_fill''])'
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -469,27 +471,27 @@ blocks:
   id: epy_block
   parameters:
     FileName: '"C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/HelloWorld.txt"'
-    Pkt_len: '60'
+    Pkt_len: '64'
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
       import os.path\nimport sys\nimport base64\nimport math\n\n\"\"\"\nState definitions\n\
       \    0   idle\n    1   send preamble\n    2   send file data\n    3   send file\
       \ name\n    4   send post filler\n\"\"\"\n\nclass blk(gr.sync_block):\n    def\
-      \ __init__(self, FileName='None', Pkt_len=52):\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='EPB: File Source to Tagged Stream',\n\
-      \            in_sig=None,\n            out_sig=[np.uint8])\n        self.FileName\
-      \ = FileName\n        self.Pkt_len = Pkt_len\n        self.state = 0      #\
-      \ idle state\n        self.pre_count = 0\n        self.indx = 0\n        self._debug\
-      \ = 0     # debug\n        self.data = \"\"\n\n        if (os.path.exists(self.FileName)):\n\
-      \            # open input file\n            self.f_in = open (self.FileName,\
-      \ 'rb')\n            self._eof = False\n            if (self._debug):\n    \
-      \            print (\"File name:\", self.FileName)\n            self.state =\
-      \ 1\n        else:\n            print(self.FileName, 'does not exist')\n   \
-      \         self._eof = True\n            self.state = 0\n\n        self.char_list\
-      \ = [37,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
-      \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,93]\n        self.c_len\
-      \ = len (self.char_list)\n        # print (self.c_len)\n        self.filler\
-      \ = [37,85,85,85, 35,69,79,70, 85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ __init__(self, FileName='None', Pkt_len=52, initial_packet_fill=1):\n    \
+      \    gr.sync_block.__init__(\n            self,\n            name='EPB: File\
+      \ Source to Tagged Stream',\n            in_sig=None,\n            out_sig=[np.uint8])\n\
+      \        self.FileName = FileName\n        self.Pkt_len = Pkt_len\n        self.initial_packet_fill\
+      \ = initial_packet_fill\n        self.state = 0      # idle state\n        self.pre_count\
+      \ = 0\n        self.indx = 0\n        self._debug = 0     # debug\n        self.data\
+      \ = \"\"\n\n        if (os.path.exists(self.FileName)):\n            # open\
+      \ input file\n            self.f_in = open (self.FileName, 'rb')\n         \
+      \   self._eof = False\n            if (self._debug):\n                print\
+      \ (\"File name:\", self.FileName)\n            self.state = 1\n        else:\n\
+      \            print(self.FileName, 'does not exist')\n            self._eof =\
+      \ True\n            self.state = 0\n\n        self.char_list = [37,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
+      \ 85,85,85,93]\n        self.c_len = len (self.char_list)\n        # print (self.c_len)\n\
+      \        self.filler = [37,85,85,85, 35,69,79,70, 85,85,85,85,85,85,85,85, 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,\
       \ 85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, 85,85,85,93]\n        self.f_len\
       \ = len (self.filler)\n\n    def work(self, input_items, output_items):\n\n\
       \        # Attempt at fixing buffer overflow\n        if(len(output_items[0])<(int(math.ceil(self.Pkt_len*8/6)))):\n\
@@ -504,7 +506,7 @@ blocks:
       \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
       \                key1,   # Key of the tag\n                val1    # Value of\
       \ the tag\n                )\n            self.indx += self.c_len\n        \
-      \    \n            i = 0\n            j = 0\n            while(j<10*self.c_len):\n\
+      \    \n            i = 0\n            j = 0\n            while(j<self.initial_packet_fill*self.c_len):\n\
       \                i = 0\n                while (i < self.c_len):\n          \
       \          output_items[0][j] = self.char_list[i]\n                    i +=\
       \ 1\n                    j += 1\n                \n                self.pre_count\
@@ -564,15 +566,17 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
+    initial_packet_fill: ''
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     _io_cache: '(''EPB: File Source to Tagged Stream'', ''blk'', [(''FileName'', "''None''"),
-      (''Pkt_len'', ''52'')], [], [(''0'', ''byte'', 1)], '''', [''FileName'', ''Pkt_len''])'
+      (''Pkt_len'', ''52''), (''initial_packet_fill'', ''1'')], [], [(''0'', ''byte'',
+      1)], '''', [''FileName'', ''Pkt_len'', ''initial_packet_fill''])'
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [144, 260.0]
+    coordinate: [112, 244.0]
     rotation: 0
     state: disabled
 - name: qtgui_freq_sink_x_0

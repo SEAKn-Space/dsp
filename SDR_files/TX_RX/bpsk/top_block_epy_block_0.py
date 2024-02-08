@@ -21,7 +21,7 @@ State definitions
 """
 
 class blk(gr.sync_block):
-    def __init__(self, FileName='None', Pkt_len=52):
+    def __init__(self, FileName='None', Pkt_len=52, initial_packet_fill=1):
         gr.sync_block.__init__(
             self,
             name='EPB: File Source to Tagged Stream',
@@ -29,6 +29,7 @@ class blk(gr.sync_block):
             out_sig=[np.uint8])
         self.FileName = FileName
         self.Pkt_len = Pkt_len
+        self.initial_packet_fill = initial_packet_fill
         self.state = 0      # idle state
         self.pre_count = 0
         self.indx = 0
@@ -83,7 +84,7 @@ class blk(gr.sync_block):
             
             i = 0
             j = 0
-            while(j<10*self.c_len):
+            while(j<self.initial_packet_fill*self.c_len):
                 i = 0
                 while (i < self.c_len):
                     output_items[0][j] = self.char_list[i]
