@@ -15,7 +15,7 @@ while True:
             if t != prev_time:
                 t_start = time.time()
                 prev_time=t
-        # os.system("python3 .\strip_preamble.py .\out_File .\output.txt")
+        os.system("python3 .\strip_preamble.py {} .\output.txt".format(fn))
         # seperated = fn.split(".")
         print("Thing Happend ;)")
         prev_time = t
