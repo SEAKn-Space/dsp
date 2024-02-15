@@ -23,3 +23,9 @@ For the most part, most interactin with the SDRs is done through the use of GNU 
 To install GNU Radio, download instructions can be found [here](https://wiki.gnuradio.org/index.php/InstallingGR).
 
 To install all needed python library dependencies run `pip install -r requirements.txt`. 
+
+### GNU Radio Block Degign and Further Resources
+
+To help make the different block diagrams, official [wiki tutorials](https://wiki.gnuradio.org/index.php?title=Tutorials) were used. 
+
+For PSK modulation specifically and packet formatting protocol, a [tutorial on packets](https://wiki.gnuradio.org/index.php?title=File_transfer_using_Packet_and_BPSK) proved helpful, as well as using an [online guide from Nuclearrando](https://nuclearrambo.com/wordpress/transferring-a-text-file-over-the-air-with-limesdr-mini/) to help debug and fix some of the issues with using the hardware SDRs.
