@@ -745,7 +745,7 @@ blocks:
 - name: epy_block_0
   id: epy_block
   parameters:
-    FileName: '"C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test2.png"'
+    FileName: '"../../test_io/QPSK.png"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
@@ -857,7 +857,7 @@ blocks:
 - name: epy_block_0_0
   id: epy_block
   parameters:
-    FileName: '"C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/HelloWorld.txt"'
+    FileName: '"../../test_io/HelloWorld.txt"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
@@ -969,7 +969,7 @@ blocks:
 - name: epy_block_0_0_0
   id: epy_block
   parameters:
-    FileName: '"C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test.png"'
+    FileName: '"../../test_io/test.png"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\

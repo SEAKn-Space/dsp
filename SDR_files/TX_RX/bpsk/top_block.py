@@ -6,7 +6,7 @@
 #
 # GNU Radio Python Flow Graph
 # Title: BPSK Send and Receive
-# Author: Nathan Wasniak
+# Author: SEAKn Space
 # GNU Radio version: 3.10.7.0
 
 from packaging.version import Version as StrictVersion
@@ -75,8 +75,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), 0.35, 45*nfilts)
         self.packet_len = packet_len = 64
         self.hdr_format = hdr_format = digital.header_format_default(access_key,0)
-        self.code2 = code2 = '11011010110111011000110011110101100010010011110111'
-        self.code1 = code1 = '010110011011101100010101011111101001001110001011010001101010001'
         self.carrier_freq = carrier_freq = 0435e6
         self.baseband_LO = baseband_LO = 30e3
         self.BPSK = BPSK = digital.constellation_bpsk().base()
@@ -354,39 +352,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_number_sink_0 = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_HORIZ,
-            1,
-            None # parent
-        )
-        self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("")
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(1):
-            self.qtgui_number_sink_0.set_min(i, -1)
-            self.qtgui_number_sink_0.set_max(i, 1)
-            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_number_sink_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0.set_factor(i, factor[i])
-
-        self.qtgui_number_sink_0.enable_autoscale(True)
-        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.qtgui_freq_sink_x_1_0 = qtgui.freq_sink_c(
             16384, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -610,7 +575,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_pfb_clock_sync_xxx_0 = digital.pfb_clock_sync_ccf(sps, .062, rrc_taps, nfilts, (nfilts/2), 1.5, 1)
         self.digital_map_bb_0 = digital.map_bb([0,1])
-        self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
+        self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, 0.35, 44, 0.0628)
         self.digital_diff_decoder_bb_0 = digital.diff_decoder_bb(2, digital.DIFF_DIFFERENTIAL)
         self.digital_crc32_bb_0_0 = digital.crc32_bb(True, "packet_len", True)
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
@@ -679,7 +644,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.digital_crc32_bb_0_0, 0), (self.blocks_repack_bits_bb_0_0_0, 0))
         self.connect((self.digital_diff_decoder_bb_0, 0), (self.digital_map_bb_0, 0))
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.low_pass_filter_0, 0))
-        self.connect((self.digital_fll_band_edge_cc_0, 1), (self.qtgui_number_sink_0, 0))
         self.connect((self.digital_map_bb_0, 0), (self.blocks_uchar_to_float_0_0, 0))
         self.connect((self.digital_map_bb_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.digital_pfb_clock_sync_xxx_0, 0), (self.digital_costas_loop_cc_0, 0))
@@ -773,18 +737,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_hdr_format(self, hdr_format):
         self.hdr_format = hdr_format
-
-    def get_code2(self):
-        return self.code2
-
-    def set_code2(self, code2):
-        self.code2 = code2
-
-    def get_code1(self):
-        return self.code1
-
-    def set_code1(self, code1):
-        self.code1 = code1
 
     def get_carrier_freq(self):
         return self.carrier_freq

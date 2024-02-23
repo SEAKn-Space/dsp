@@ -6,9 +6,11 @@
 #
 # GNU Radio Python Flow Graph
 # Title: qpsk_rx
+# Author: SEAKn Space
 # Description: packet receive
-# GNU Radio version: 3.10.8.0
+# GNU Radio version: 3.10.7.0
 
+from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import analog
@@ -59,9 +61,10 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "qpsk_rx")
 
         try:
-            geometry = self.settings.value("geometry")
-            if geometry:
-                self.restoreGeometry(geometry)
+            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+                self.restoreGeometry(self.settings.value("geometry").toByteArray())
+            else:
+                self.restoreGeometry(self.settings.value("geometry"))
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -77,9 +80,8 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.rtl_rate = rtl_rate = 1e6
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), 0.35, 45*nfilts)
         self.qpsk = qpsk = digital.constellation_qpsk().base()
-        self.qpsk.set_npwr(1.0)
         self.phase_bw = phase_bw = 0.25132741228
-        self.packet_len = packet_len = 60
+        self.packet_len = packet_len = 64
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.hackrf_rate = hackrf_rate = 20*samp_rate
         self.excess_bw = excess_bw = 0.35
@@ -563,6 +565,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
             128,
             )
         self.digital_map_bb_0_0 = digital.map_bb([0,1,2,3])
+        self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, 0.35, 44, 0.0628)
         self.digital_diff_decoder_bb_0 = digital.diff_decoder_bb(4, digital.DIFF_DIFFERENTIAL)
         self.digital_crc32_bb_0_0 = digital.crc32_bb(True, "packet_len", True)
         self.digital_costas_loop_cc_0 = digital.costas_loop_cc(phase_bw, 4, False)
@@ -597,7 +600,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_argmax_xx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.qtgui_vector_sink_f_0, 0))
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.blocks_stream_to_vector_0, 0))
-        self.connect((self.blocks_multiply_xx_0_0, 0), (self.low_pass_filter_0, 0))
+        self.connect((self.blocks_multiply_xx_0_0, 0), (self.digital_fll_band_edge_cc_0, 0))
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.qtgui_freq_sink_x_1_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.digital_crc32_bb_0_0, 0))
         self.connect((self.blocks_short_to_float_0, 0), (self.qtgui_number_sink_0, 0))
@@ -612,6 +615,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_costas_loop_cc_0, 0), (self.qtgui_const_sink_x_0, 0))
         self.connect((self.digital_crc32_bb_0_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.digital_diff_decoder_bb_0, 0), (self.blocks_unpack_k_bits_bb_0, 0))
+        self.connect((self.digital_fll_band_edge_cc_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.digital_map_bb_0_0, 0), (self.blocks_uchar_to_float_0_0, 0))
         self.connect((self.digital_map_bb_0_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.digital_symbol_sync_xx_0, 0), (self.digital_costas_loop_cc_0, 0))
@@ -639,7 +643,6 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
     def set_sps(self, sps):
         self.sps = sps
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), 0.35, 45*self.nfilts))
-        self.digital_symbol_sync_xx_0.set_sps(self.sps)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -754,6 +757,9 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=qpsk_rx, options=None):
 
+    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
+        style = gr.prefs().get_string('qtgui', 'style', 'raster')
+        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()
