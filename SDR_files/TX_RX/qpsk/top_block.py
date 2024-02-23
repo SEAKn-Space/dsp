@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: QPSK Send and Receive
-# Author: Nathan Wasniak
+# Title: qpsk
 # GNU Radio version: 3.10.8.0
 
 from PyQt5 import Qt
@@ -25,16 +24,16 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 import sip
-import top_block_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
+import top_block_epy_block_0 as epy_block_0  # embedded python block
 
 
 
 class top_block(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "QPSK Send and Receive", catch_exceptions=True)
+        gr.top_block.__init__(self, "qpsk", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("QPSK Send and Receive")
+        self.setWindowTitle("qpsk")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -572,8 +571,7 @@ class top_block(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test.png", Pkt_len=packet_len, initial_packet_fill=100)
-        self.epy_block_0_0_0.set_min_output_buffer((2**16))
+        self.epy_block_0 = epy_block_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test2.png", Pkt_len=packet_len, initial_packet_fill=100)
         self.digital_symbol_sync_xx_0 = digital.symbol_sync_cc(
             digital.TED_SIGNUM_TIMES_SLOPE_ML,
             sps,
@@ -616,9 +614,11 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_MSB_FIRST)
         self.blocks_multiply_xx_0_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\dsp\\SDR_files\\test_io\\out_File', False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 0)
+        self.blocks_add_xx_0 = blocks.add_vcc(1)
+        self.analog_sig_source_x_0_1 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, 10_000, 0.5, 0, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-30_000), 0.5, 0, 0)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, baseband_LO, 0.3, 0, 0)
         self.analog_feedforward_agc_cc_0 = analog.feedforward_agc_cc(1024, 1.55)
@@ -630,9 +630,11 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.analog_feedforward_agc_cc_0, 0), (self.digital_symbol_sync_xx_0, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_multiply_xx_0_0, 1))
+        self.connect((self.analog_sig_source_x_0_1, 0), (self.blocks_add_xx_0, 1))
+        self.connect((self.blocks_add_xx_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_delay_0, 0), (self.qtgui_time_sink_x_0_1, 0))
+        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.blocks_uchar_to_float_0_0_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_0_0_0, 0), (self.blocks_uchar_to_float_0_0_0_0_0, 0))
@@ -661,7 +663,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.digital_map_bb_0_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
         self.connect((self.digital_symbol_sync_xx_0, 0), (self.digital_costas_loop_cc_0, 0))
-        self.connect((self.epy_block_0_0_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.epy_block_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_feedforward_agc_cc_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_time_sink_x_0, 0))
@@ -714,6 +716,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.analog_sig_source_x_0_1.set_sampling_freq(self.samp_rate)
         self.blocks_throttle2_0.set_sample_rate((20*self.samp_rate))
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 6e3, 1.6E3, window.WIN_HAMMING, 6.76))
         self.qtgui_freq_sink_x_0.set_frequency_range(0, (20*self.samp_rate))
@@ -751,7 +754,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.epy_block_0_0_0.Pkt_len = self.packet_len
+        self.epy_block_0.Pkt_len = self.packet_len
 
     def get_hdr_format(self):
         return self.hdr_format

@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: Nathan Wasniak
+    author: SEAKn Space
     catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
@@ -62,7 +62,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1144, 16.0]
+    coordinate: [1168, 12.0]
     rotation: 0
     state: enabled
 - name: baseband_LO
@@ -86,33 +86,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1400, 20.0]
+    coordinate: [1416, 12.0]
     rotation: 0
     state: true
-- name: code1
-  id: variable
-  parameters:
-    comment: ''
-    value: '''010110011011101100010101011111101001001110001011010001101010001'''
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [64, 916.0]
-    rotation: 0
-    state: enabled
-- name: code2
-  id: variable
-  parameters:
-    comment: ''
-    value: '''11011010110111011000110011110101100010010011110111'''
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [240, 916.0]
-    rotation: 0
-    state: enabled
 - name: hdr_format
   id: variable
   parameters:
@@ -206,7 +182,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 16.0]
+    coordinate: [1336, 12.0]
     rotation: 0
     state: enabled
 - name: analog_feedforward_agc_cc_0
@@ -269,7 +245,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 760.0]
+    coordinate: [24, 1032.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -343,7 +319,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 672.0]
+    coordinate: [144, 816.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0_0
@@ -635,6 +611,26 @@ blocks:
     coordinate: [1128, 652.0]
     rotation: 0
     state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '44'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '0.35'
+    samps_per_sym: '15'
+    type: cc
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 840.0]
+    rotation: 0
+    state: true
 - name: digital_map_bb_0
   id: digital_map_bb
   parameters:
@@ -1048,7 +1044,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 672.0]
+    coordinate: [320, 1000.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -2366,7 +2362,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 376.0]
+    coordinate: [24, 488.0]
     rotation: 0
     state: disabled
 - name: soapy_hackrf_sink_0_0
@@ -2397,7 +2393,7 @@ connections:
 - [blocks_delay_0, '0', qtgui_time_sink_x_0_1, '0']
 - [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0_0, '0']
 - [blocks_multiply_xx_0, '0', rational_resampler_xxx_0, '0']
-- [blocks_multiply_xx_0_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_uchar_to_float_0_0_0_0, '0']
 - [blocks_repack_bits_bb_0_0_0, '0', blocks_uchar_to_float_0_0_0_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', digital_crc32_bb_0_0, '0']
@@ -2420,6 +2416,7 @@ connections:
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_repack_bits_bb_0_0_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
+- [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
 - [digital_map_bb_0, '0', blocks_uchar_to_float_0_0, '0']
 - [digital_map_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']

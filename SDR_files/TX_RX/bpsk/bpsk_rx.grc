@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: Nathan Wasniak
+    author: SEAKn Space
     catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
@@ -162,12 +162,12 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '60'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1568, 12.0]
+    coordinate: [1560, 12.0]
     rotation: 0
     state: true
 - name: phase_bw
@@ -251,7 +251,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1480, 184.0]
+    coordinate: [1664, 12.0]
     rotation: 0
     state: true
 - name: analog_feedforward_agc_cc_0
@@ -268,7 +268,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 364.0]
+    coordinate: [1312, 356.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0_0
@@ -554,6 +554,26 @@ blocks:
     coordinate: [1256, 604.0]
     rotation: 0
     state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '44'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '0.35'
+    samps_per_sym: '15'
+    type: cc
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 304.0]
+    rotation: 0
+    state: true
 - name: digital_map_bb_0
   id: digital_map_bb
   parameters:
@@ -635,7 +655,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 320.0]
+    coordinate: [1080, 208.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -889,7 +909,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 132.0]
+    coordinate: [1312, 124.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_1_0_0
@@ -1130,7 +1150,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 244.0]
+    coordinate: [1312, 236.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0
@@ -1849,7 +1869,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1360, 376.0]
+    coordinate: [1560, 368.0]
     rotation: 0
     state: true
 - name: virtual_sink_0_0
@@ -1900,7 +1920,7 @@ connections:
 - [blocks_complex_to_mag_squared_0, '0', blocks_argmax_xx_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', qtgui_vector_sink_f_0, '0']
 - [blocks_multiply_xx_0_0, '0', blocks_stream_to_vector_0, '0']
-- [blocks_multiply_xx_0_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
 - [blocks_multiply_xx_0_0, '0', qtgui_freq_sink_x_1_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', digital_crc32_bb_0_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_number_sink_0, '0']
@@ -1914,6 +1934,7 @@ connections:
 - [digital_costas_loop_cc_0_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_diff_decoder_bb_0, '0', virtual_sink_0_0, '0']
+- [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
 - [digital_map_bb_0, '0', blocks_uchar_to_float_0_0, '0']
 - [digital_map_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0_0, '0']
