@@ -28,7 +28,7 @@ options:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 12.0]
+    coordinate: [16, 8.0]
     rotation: 0
     state: enabled
 
@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [432, 76.0]
+    coordinate: [416, 72.0]
     rotation: 0
     state: true
 - name: access_key
@@ -54,7 +54,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 12.0]
+    coordinate: [736, 8.0]
     rotation: 0
     state: enabled
 - name: baseband_LO
@@ -66,7 +66,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1176, 12.0]
+    coordinate: [984, 8.0]
     rotation: 0
     state: disabled
 - name: baseband_LO
@@ -97,7 +97,6 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
-    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -107,7 +106,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 12.0]
+    coordinate: [416, 8.0]
     rotation: 0
     state: true
 - name: excess_bw
@@ -119,7 +118,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 12.0]
+    coordinate: [328, 8.0]
     rotation: 0
     state: enabled
 - name: hackrf_rate
@@ -131,7 +130,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1064, 12.0]
+    coordinate: [896, 8.0]
     rotation: 0
     state: true
 - name: hdr_format
@@ -143,7 +142,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 12.0]
+    coordinate: [560, 8.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -155,19 +154,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1480, 12.0]
+    coordinate: [1232, 8.0]
     rotation: 0
     state: enabled
 - name: packet_len
   id: variable
   parameters:
     comment: ''
-    value: '60'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1568, 12.0]
+    coordinate: [1296, 8.0]
     rotation: 0
     state: true
 - name: phase_bw
@@ -179,7 +178,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 76.0]
+    coordinate: [328, 72.0]
     rotation: 0
     state: true
 - name: rrc_taps
@@ -191,7 +190,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1296, 12.0]
+    coordinate: [1088, 8.0]
     rotation: 0
     state: enabled
 - name: rtl_rate
@@ -203,7 +202,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 76.0]
+    coordinate: [168, 72.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -215,7 +214,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 12]
+    coordinate: [168, 8.0]
     rotation: 0
     state: enabled
 - name: sps
@@ -227,7 +226,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 76.0]
+    coordinate: [256, 72.0]
     rotation: 0
     state: enabled
 - name: thresh
@@ -239,7 +238,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 12.0]
+    coordinate: [256, 8.0]
     rotation: 0
     state: enabled
 - name: transmit_freq
@@ -251,7 +250,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1480, 184.0]
+    coordinate: [1384, 8.0]
     rotation: 0
     state: true
 - name: analog_feedforward_agc_cc_0
@@ -268,7 +267,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 364.0]
+    coordinate: [1360, 352.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0_0
@@ -554,6 +553,26 @@ blocks:
     coordinate: [1256, 604.0]
     rotation: 0
     state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '44'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '.35'
+    samps_per_sym: '15'
+    type: cc
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 304.0]
+    rotation: 0
+    state: true
 - name: digital_map_bb_0
   id: digital_map_bb
   parameters:
@@ -635,7 +654,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 320.0]
+    coordinate: [1088, 208.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -889,7 +908,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 132.0]
+    coordinate: [1360, 112.0]
     rotation: 0
     state: true
 - name: qtgui_freq_sink_x_1_0_0
@@ -1130,7 +1149,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1112, 244.0]
+    coordinate: [1360, 224.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0
@@ -1849,7 +1868,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1360, 376.0]
+    coordinate: [1608, 360.0]
     rotation: 0
     state: true
 - name: virtual_sink_0_0
@@ -1900,7 +1919,7 @@ connections:
 - [blocks_complex_to_mag_squared_0, '0', blocks_argmax_xx_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', qtgui_vector_sink_f_0, '0']
 - [blocks_multiply_xx_0_0, '0', blocks_stream_to_vector_0, '0']
-- [blocks_multiply_xx_0_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
 - [blocks_multiply_xx_0_0, '0', qtgui_freq_sink_x_1_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', digital_crc32_bb_0_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_number_sink_0, '0']
@@ -1914,6 +1933,7 @@ connections:
 - [digital_costas_loop_cc_0_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_diff_decoder_bb_0, '0', virtual_sink_0_0, '0']
+- [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
 - [digital_map_bb_0, '0', blocks_uchar_to_float_0_0, '0']
 - [digital_map_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0_0, '0']
@@ -1930,4 +1950,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.8.0
+  grc_version: 3.10.7.0

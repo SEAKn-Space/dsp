@@ -40,7 +40,6 @@ blocks:
     const_points: '[-1, 1]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
-    npwr: '0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -98,7 +97,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 916.0]
+    coordinate: [1600, 16.0]
     rotation: 0
     state: enabled
 - name: code2
@@ -110,7 +109,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 916.0]
+    coordinate: [1776, 16.0]
     rotation: 0
     state: enabled
 - name: hdr_format
@@ -663,6 +662,26 @@ blocks:
     coordinate: [1128, 652.0]
     rotation: 0
     state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '44'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '.35'
+    samps_per_sym: '15'
+    type: cc
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [352, 744.0]
+    rotation: 0
+    state: true
 - name: digital_map_bb_0_0
   id: digital_map_bb
   parameters:
@@ -1080,7 +1099,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 672.0]
+    coordinate: [384, 936.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -1101,7 +1120,7 @@ blocks:
     autoscale: 'False'
     axislabels: 'True'
     color1: '"blue"'
-    color10: '"dark blue"'
+    color10: '"red"'
     color2: '"red"'
     color3: '"green"'
     color4: '"black"'
@@ -1496,7 +1515,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 972.0]
+    coordinate: [576, 960.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -2429,7 +2448,7 @@ connections:
 - [blocks_delay_0, '0', qtgui_time_sink_x_0_1, '0']
 - [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0_0, '0']
 - [blocks_multiply_xx_0, '0', rational_resampler_xxx_0, '0']
-- [blocks_multiply_xx_0_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_uchar_to_float_0_0_0_0, '0']
 - [blocks_repack_bits_bb_0_0_0, '0', blocks_uchar_to_float_0_0_0_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', digital_crc32_bb_0_0, '0']
@@ -2453,6 +2472,7 @@ connections:
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_repack_bits_bb_0_0_0, '0']
 - [digital_diff_decoder_bb_0, '0', blocks_unpack_k_bits_bb_0, '0']
+- [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
 - [digital_map_bb_0_0, '0', blocks_uchar_to_float_0_0, '0']
 - [digital_map_bb_0_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_protocol_formatter_bb_0, '0', blocks_tagged_stream_mux_0, '0']
@@ -2474,4 +2494,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.8.0
+  grc_version: 3.10.7.0

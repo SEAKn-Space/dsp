@@ -40,7 +40,6 @@ blocks:
     const_points: '[-1, 1]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
-    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -226,6 +225,24 @@ blocks:
     coordinate: [600, 812.0]
     rotation: 0
     state: enabled
+- name: analog_pll_carriertracking_cc_0
+  id: analog_pll_carriertracking_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max_freq: 2*3.14*(0-1_000)/samp_rate
+    maxoutbuf: '0'
+    min_freq: 2*3.14*(0+1_000)/samp_rate
+    minoutbuf: '0'
+    w: '0.35'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [248, 576.0]
+    rotation: 0
+    state: disabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -233,7 +250,7 @@ blocks:
     alias: ''
     amp: '0.3'
     comment: ''
-    freq: baseband_LO
+    freq: baseband_LO+5000
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -269,7 +286,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 760.0]
+    coordinate: [0, 760.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -343,7 +360,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 672.0]
+    coordinate: [136, 672.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0_0
@@ -635,6 +652,26 @@ blocks:
     coordinate: [1128, 652.0]
     rotation: 0
     state: enabled
+- name: digital_fll_band_edge_cc_0
+  id: digital_fll_band_edge_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filter_size: '44'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rolloff: '.35'
+    samps_per_sym: '15'
+    type: cc
+    w: '0.0628'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 744.0]
+    rotation: 0
+    state: true
 - name: digital_map_bb_0
   id: digital_map_bb
   parameters:
@@ -802,7 +839,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 108.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
@@ -902,7 +939,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: ''
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -1014,7 +1051,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: ''
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: 2**16
   states:
@@ -1026,7 +1063,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 268.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: low_pass_filter_0
   id: low_pass_filter
   parameters:
@@ -1048,7 +1085,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 672.0]
+    coordinate: [432, 632.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -1069,7 +1106,7 @@ blocks:
     autoscale: 'False'
     axislabels: 'True'
     color1: '"blue"'
-    color10: '"dark blue"'
+    color10: '"red"'
     color2: '"red"'
     color3: '"green"'
     color4: '"black"'
@@ -1465,6 +1502,69 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [576, 972.0]
+    rotation: 0
+    state: true
+- name: qtgui_number_sink_0
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'True'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: '1'
+    min: '-1'
+    name: '""'
+    nconnections: '1'
+    type: float
+    unit1: ''
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [336, 1024.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -2392,12 +2492,14 @@ blocks:
 
 connections:
 - [analog_feedforward_agc_cc_0, '0', digital_pfb_clock_sync_xxx_0, '0']
+- [analog_pll_carriertracking_cc_0, '0', low_pass_filter_0, '0']
 - [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
 - [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
 - [blocks_delay_0, '0', qtgui_time_sink_x_0_1, '0']
 - [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0_0, '0']
 - [blocks_multiply_xx_0, '0', rational_resampler_xxx_0, '0']
-- [blocks_multiply_xx_0_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0_0, '0', analog_pll_carriertracking_cc_0, '0']
+- [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
 - [blocks_repack_bits_bb_0_0, '0', blocks_uchar_to_float_0_0_0_0, '0']
 - [blocks_repack_bits_bb_0_0_0, '0', blocks_uchar_to_float_0_0_0_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', digital_crc32_bb_0_0, '0']
@@ -2420,6 +2522,8 @@ connections:
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_repack_bits_bb_0_0_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
+- [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
+- [digital_fll_band_edge_cc_0, '1', qtgui_number_sink_0, '0']
 - [digital_map_bb_0, '0', blocks_uchar_to_float_0_0, '0']
 - [digital_map_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_costas_loop_cc_0, '0']
@@ -2441,4 +2545,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.8.0
+  grc_version: 3.10.7.0
