@@ -2,6 +2,7 @@ import os
 import time
 import sys
 
+fn = "./out_File"
 fn = sys.argv[1]
 prev_time = os.path.getmtime(fn)
 
@@ -15,6 +16,8 @@ while True:
             if t != prev_time:
                 t_start = time.time()
                 prev_time=t
+        os.system("python3 ./strip_preamble.py {} ./output.png".format(fn))
+        # seperated = fn.split(".")
         os.system("python3 .\strip_preamble.py {} {}".format(fn,sys.argv[2]))
         print("Thing Happend ;)")
         prev_time = t

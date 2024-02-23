@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: Nathan Wasniak
+    author: SEAKn Space
     catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
@@ -97,7 +97,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1600, 16.0]
+    coordinate: [1624, 20.0]
     rotation: 0
     state: enabled
 - name: code2
@@ -109,7 +109,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1776, 16.0]
+    coordinate: [1800, 20.0]
     rotation: 0
     state: enabled
 - name: hdr_format
@@ -280,7 +280,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 760.0]
+    coordinate: [0, 936.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -310,7 +310,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: C:\Users\natha\OneDrive - Colorado School of Mines\Senior Design\GNU_radio\test_io\out_File
+    file: C:\Users\natha\dsp\SDR_files\test_io\out_File
     type: byte
     unbuffered: 'True'
     vlen: '1'
@@ -354,7 +354,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 672.0]
+    coordinate: [152, 736.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0_0
@@ -671,7 +671,7 @@ blocks:
     filter_size: '44'
     maxoutbuf: '0'
     minoutbuf: '0'
-    rolloff: '.35'
+    rolloff: '0.35'
     samps_per_sym: '15'
     type: cc
     w: '0.0628'
@@ -679,7 +679,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 744.0]
+    coordinate: [328, 736.0]
     rotation: 0
     state: true
 - name: digital_map_bb_0_0
@@ -841,7 +841,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '100'
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -853,7 +853,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 108.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
@@ -953,7 +953,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: ''
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -1065,7 +1065,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '100'
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: 2**16
   states:
@@ -1077,7 +1077,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 268.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: low_pass_filter_0
   id: low_pass_filter
   parameters:
@@ -1099,7 +1099,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 936.0]
+    coordinate: [328, 888.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -2000,7 +2000,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 36.0]
+    coordinate: [1008, 84.0]
     rotation: 0
     state: true
 - name: rational_resampler_xxx_0
@@ -2060,7 +2060,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [88, 436.0]
+    coordinate: [80, 396.0]
     rotation: 0
     state: enabled
 - name: rtlsdr_source_0
@@ -2417,7 +2417,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [0, 592.0]
+    coordinate: [0, 432.0]
     rotation: 0
     state: disabled
 - name: soapy_hackrf_sink_0_0
