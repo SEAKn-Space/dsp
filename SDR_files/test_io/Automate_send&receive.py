@@ -65,8 +65,8 @@ while(1):
         print("BPSK - Transmit Binary Phase Shift Keying Signal")
         print("rand - send a random signal")
         print("cont - continuously send a random signal")
-        print("contbpsk - continuously send a BPSK signal")
-        print("contqpsk - continuously send a QPSK signal")
+        print("contBPSK - continuously send a BPSK signal")
+        print("contQPSK - continuously send a QPSK signal")
         print("help - display this message")
         print("exit - exit the program")
     else:
