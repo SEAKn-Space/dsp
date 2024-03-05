@@ -1,0 +1,8 @@
+{
+    "lib": "libvart-dpu-runner.so",
+    "filename": "CNN2d_test_ex.xmodel",
+    "kernel": [
+        "subgraph_CNN2D__CNN2D_AdaptiveAvgPool2d_adaptive_avg_pool2d__504_fix"
+    ],
+    "target": "DPUCVDX8G_ISA3_C32B6"
+}
