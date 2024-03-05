@@ -9,7 +9,7 @@ options:
     description: packet transmit
     gen_cmake: 'On'
     gen_linking: dynamic
-    generate_options: hb_qt_gui
+    generate_options: no_gui
     hier_block_src_path: '.:'
     id: qpsk_tx_automated
     max_nouts: '0'

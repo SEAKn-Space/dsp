@@ -5,13 +5,11 @@ import msvcrt
 
 # Run QPSK transmit
 def tranmit_qpsk():
-    # subprocess.run(['python', "../TX_RX/qpsk/qpsk_tx_automated.py" ])
-    subprocess.run(['python', '..\\TX_RX\\bpsk\\qpsk_tx_automated.py' ])
+    subprocess.run(['python', '../TX_RX/qpsk/qpsk_tx_automated.py' ])
 
 # Run BPSK transmit
 def tranmit_bpsk():
-    # subprocess.run(['python', 'C:\\Users\\natha/.grc_gnuradio\\bpsk_tx_automated.py' ])
-    subprocess.run(['python',  '..TX_RX\\bpsk\\bpsk_tx_automated.py' ])
+    subprocess.run(['python',  '../TX_RX/bpsk/bpsk_tx_automated.py' ])
 
 # Transmit random signal
 def tranmit_random():
@@ -30,7 +28,6 @@ print("Select a modulation scheme to transmit. Use 'help' for a list of commands
 while(1):
 
     input_str = input("Enter command: ")
-    # print(input_str.upper())
 
     if input_str.upper() == "QPSK":
         print("Transmitting QPSK signal...")
@@ -72,3 +69,5 @@ while(1):
         print("contqpsk - continuously send a QPSK signal")
         print("help - display this message")
         print("exit - exit the program")
+    else:
+        print("Invalid command. Use 'help' for a list of commands.")

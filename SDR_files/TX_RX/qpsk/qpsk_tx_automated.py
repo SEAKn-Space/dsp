@@ -10,8 +10,6 @@
 # Description: packet transmit
 # GNU Radio version: 3.10.8.0
 
-from PyQt5 import Qt
-from gnuradio import qtgui
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import digital
@@ -21,46 +19,19 @@ from gnuradio import gr
 from gnuradio.fft import window
 import sys
 import signal
-from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import soapy
-import qpsk_tx_automated_epy_block_0_2 as epy_block_0_2  # embedded python block
+import qpsk_tx_automated_epy_block_0 as epy_block_0  # embedded python block
 
 
 
-class qpsk_tx_automated(gr.top_block, Qt.QWidget):
+
+class qpsk_tx_automated(gr.top_block):
 
     def __init__(self, InFile='default'):
         gr.top_block.__init__(self, "qpsk_tx_automated", catch_exceptions=True)
-        Qt.QWidget.__init__(self)
-        self.setWindowTitle("qpsk_tx_automated")
-        qtgui.util.check_set_qss()
-        try:
-            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
-        except BaseException as exc:
-            print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
-        self.top_scroll_layout = Qt.QVBoxLayout()
-        self.setLayout(self.top_scroll_layout)
-        self.top_scroll = Qt.QScrollArea()
-        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
-        self.top_scroll_layout.addWidget(self.top_scroll)
-        self.top_scroll.setWidgetResizable(True)
-        self.top_widget = Qt.QWidget()
-        self.top_scroll.setWidget(self.top_widget)
-        self.top_layout = Qt.QVBoxLayout(self.top_widget)
-        self.top_grid_layout = Qt.QGridLayout()
-        self.top_layout.addLayout(self.top_grid_layout)
-
-        self.settings = Qt.QSettings("GNU Radio", "qpsk_tx_automated")
-
-        try:
-            geometry = self.settings.value("geometry")
-            if geometry:
-                self.restoreGeometry(geometry)
-        except BaseException as exc:
-            print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
         ##################################################
         # Parameters
@@ -99,13 +70,13 @@ class qpsk_tx_automated(gr.top_block, Qt.QWidget):
         self.soapy_hackrf_sink_0.set_bandwidth(0, 0)
         self.soapy_hackrf_sink_0.set_frequency(0, transmit_freq)
         self.soapy_hackrf_sink_0.set_gain(0, 'AMP', False)
-        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(40, 0.0), 47.0))
+        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(15, 0.0), 47.0))
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=20,
                 decimation=1,
                 taps=[],
                 fractional_bw=0)
-        self.epy_block_0_2 = epy_block_0_2.blk(FileName="./QPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
+        self.epy_block_0 = epy_block_0.blk(FileName="./BPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(
@@ -119,6 +90,8 @@ class qpsk_tx_automated(gr.top_block, Qt.QWidget):
             truncate=False)
         self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_char*1, 'packet_len', 0)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_gr_complex*1, 'C:\\Users\\natha\\Documents\\testData', False)
+        self.blocks_file_sink_0_0.set_unbuffered(False)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_gr_complex*1, "./ModulatedData.txt", False)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, baseband_LO, 0.3, 0, 0)
@@ -130,22 +103,15 @@ class qpsk_tx_automated(gr.top_block, Qt.QWidget):
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_multiply_xx_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_tagged_stream_mux_0, 0), (self.digital_constellation_modulator_0, 0))
+        self.connect((self.digital_constellation_modulator_0, 0), (self.blocks_file_sink_0_0, 0))
         self.connect((self.digital_constellation_modulator_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_tagged_stream_mux_0, 1))
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
-        self.connect((self.epy_block_0_2, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.epy_block_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.soapy_hackrf_sink_0, 0))
 
-
-    def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "qpsk_tx_automated")
-        self.settings.setValue("geometry", self.saveGeometry())
-        self.stop()
-        self.wait()
-
-        event.accept()
 
     def get_InFile(self):
         return self.InFile
@@ -199,7 +165,7 @@ class qpsk_tx_automated(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.epy_block_0_2.Pkt_len = self.packet_len
+        self.epy_block_0.Pkt_len = self.packet_len
 
     def get_low_pass_filter_taps(self):
         return self.low_pass_filter_taps
@@ -240,29 +206,21 @@ def argument_parser():
 def main(top_block_cls=qpsk_tx_automated, options=None):
     if options is None:
         options = argument_parser().parse_args()
-
-    qapp = Qt.QApplication(sys.argv)
-
     tb = top_block_cls(InFile=options.InFile)
-
-    tb.start()
-
-    tb.show()
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
         tb.wait()
 
-        Qt.QApplication.quit()
+        sys.exit(0)
 
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
 
-    timer = Qt.QTimer()
-    timer.start(500)
-    timer.timeout.connect(lambda: None)
+    tb.start()
 
-    qapp.exec_()
+    tb.wait()
+
 
 if __name__ == '__main__':
     main()
