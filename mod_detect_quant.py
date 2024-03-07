@@ -34,6 +34,8 @@ parser.add_argument(
     "--config_file", default=None, help="quantization configuration file"
 )
 parser.add_argument(
+  if inf.sum() > 0 or nan.sum() > 0:
+/opt/vitis_ai/conda/envs/vitis-ai-pytorch/lib/python3.8/site-packages/pytorch_nndct/nn/modules/fix_ops.py:518: TracerWarning: Converting a 
     "--subset_len",
     default=None,
     type=int,
