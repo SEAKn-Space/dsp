@@ -8,9 +8,8 @@
 # Title: qpsk_rx
 # Author: SEAKn Space
 # Description: packet receive
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import analog
@@ -61,10 +60,9 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "qpsk_rx")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -80,6 +78,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.rtl_rate = rtl_rate = 1e6
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), 0.35, 45*nfilts)
         self.qpsk = qpsk = digital.constellation_qpsk().base()
+        self.qpsk.set_npwr(1.0)
         self.phase_bw = phase_bw = 0.25132741228
         self.packet_len = packet_len = 64
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
@@ -643,6 +642,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
     def set_sps(self, sps):
         self.sps = sps
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), 0.35, 45*self.nfilts))
+        self.digital_symbol_sync_xx_0.set_sps(self.sps)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -757,9 +757,6 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=qpsk_rx, options=None):
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()

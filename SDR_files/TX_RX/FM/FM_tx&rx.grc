@@ -161,7 +161,7 @@ blocks:
     bus_structure: null
     coordinate: [832, 244.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_wavfile_sink_0
   id: blocks_wavfile_sink
   parameters:
@@ -780,7 +780,7 @@ blocks:
     bus_structure: null
     coordinate: [1056, 376.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: soapy_hackrf_sink_0_0
   id: soapy_hackrf_sink
   parameters:
@@ -788,7 +788,7 @@ blocks:
     alias: ''
     amp: 'False'
     bandwidth: '0'
-    center_freq: samp_rate
+    center_freq: carrier_freq
     comment: ''
     dev_args: ''
     samp_rate: samp_rate
@@ -800,7 +800,7 @@ blocks:
     bus_structure: null
     coordinate: [792, 388.0]
     rotation: 0
-    state: disabled
+    state: enabled
 
 connections:
 - [analog_wfm_rcv_0, '0', blocks_multiply_const_vxx_0, '0']

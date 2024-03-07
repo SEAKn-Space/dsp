@@ -76,7 +76,7 @@ class qpsk_tx_automated(gr.top_block):
                 decimation=1,
                 taps=[],
                 fractional_bw=0)
-        self.epy_block_0 = epy_block_0.blk(FileName="./BPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
+        self.epy_block_0 = epy_block_0.blk(FileName="./SDR_files/test_io/QPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(

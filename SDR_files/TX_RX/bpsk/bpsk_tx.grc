@@ -490,7 +490,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 184.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
@@ -714,7 +714,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 344.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -1184,7 +1184,7 @@ blocks:
     dev_args: ''
     samp_rate: 20*samp_rate
     type: fc32
-    vga: '15'
+    vga: '40'
   states:
     bus_sink: false
     bus_source: false

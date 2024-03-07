@@ -388,7 +388,7 @@ blocks:
 - name: epy_block_0
   id: epy_block
   parameters:
-    FileName: '"./BPSK.png"'
+    FileName: '"./SDR_files/test_io/QPSK.png"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
@@ -494,13 +494,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 180.0]
+    coordinate: [64, 172.0]
     rotation: 0
     state: enabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
-    FileName: '"./test_io/HelloWorld.txt"'
+    FileName: '"./SDR_files/test_io/HelloWorld.txt"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
@@ -606,7 +606,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 268.0]
+    coordinate: [64, 252.0]
     rotation: 0
     state: disabled
 - name: epy_block_0_1
@@ -724,7 +724,7 @@ blocks:
 - name: epy_block_0_1_0
   id: epy_block
   parameters:
-    FileName: '"./test_io/test.png"'
+    FileName: '"./SDR_files/test_io/test.png"'
     Pkt_len: packet_len
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
@@ -830,7 +830,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 356.0]
+    coordinate: [64, 348.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0

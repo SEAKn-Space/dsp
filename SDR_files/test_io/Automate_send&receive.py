@@ -5,11 +5,11 @@ import msvcrt
 
 # Run QPSK transmit
 def tranmit_qpsk():
-    subprocess.run(['python', '../TX_RX/qpsk/qpsk_tx_automated.py' ])
+    subprocess.run(['python', './SDR_files/TX_RX/qpsk/qpsk_tx_automated.py' ])
 
 # Run BPSK transmit
 def tranmit_bpsk():
-    subprocess.run(['python',  '../TX_RX/bpsk/bpsk_tx_automated.py' ])
+    subprocess.run(['python',  './SDR_files/TX_RX/bpsk/bpsk_tx_automated.py' ])
 
 # Transmit random signal
 def tranmit_random():
@@ -23,6 +23,7 @@ def tranmit_random():
 
 print("Welcome to Automated Send!")
 print("Make sure to have HackRF connected before running.")
+print("Note: this program should be run from the root directory of the project.")
 print("Select a modulation scheme to transmit. Use 'help' for a list of commands.")
 # Main terminal loop
 while(1):
