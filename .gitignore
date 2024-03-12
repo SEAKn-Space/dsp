@@ -6,3 +6,8 @@ SDR_files/test_io/QPSK_Data_Dump
 SDR_files/test_io/QPSK_Data_Dump_Centered
 SDR_files/test_io/raw_bpsk
 SDR_files/test_io/raw_qpsk
+
+SDR_files/TX_RX/qpsk/ModulatedData.txt
+SDR_files/test_io/out_File
+SDR_files/test_io/out_image.png
+SDR_files/test_io/out_radio.wav

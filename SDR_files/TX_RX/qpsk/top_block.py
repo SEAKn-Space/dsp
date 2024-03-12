@@ -7,9 +7,8 @@
 # GNU Radio Python Flow Graph
 # Title: QPSK Send and Receive
 # Author: SEAKn Space
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import analog
@@ -56,10 +55,9 @@ class top_block(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "top_block")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -81,6 +79,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.carrier_freq = carrier_freq = 0435e6
         self.baseband_LO = baseband_LO = 30e3
         self.QPSK = QPSK = digital.constellation_qpsk().base()
+        self.QPSK.set_npwr(1.0)
 
         ##################################################
         # Blocks
@@ -355,6 +354,48 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self.qtgui_freq_sink_x_1_0_0 = qtgui.freq_sink_c(
+            16384, #size
+            window.WIN_BLACKMAN_hARRIS, #wintype
+            0, #fc
+            samp_rate, #bw
+            "Shifted Receive", #name
+            1,
+            None # parent
+        )
+        self.qtgui_freq_sink_x_1_0_0.set_update_time(0.10)
+        self.qtgui_freq_sink_x_1_0_0.set_y_axis((-140), 10)
+        self.qtgui_freq_sink_x_1_0_0.set_y_label('Relative Gain', 'dB')
+        self.qtgui_freq_sink_x_1_0_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
+        self.qtgui_freq_sink_x_1_0_0.enable_autoscale(False)
+        self.qtgui_freq_sink_x_1_0_0.enable_grid(False)
+        self.qtgui_freq_sink_x_1_0_0.set_fft_average(1.0)
+        self.qtgui_freq_sink_x_1_0_0.enable_axis_labels(True)
+        self.qtgui_freq_sink_x_1_0_0.enable_control_panel(False)
+        self.qtgui_freq_sink_x_1_0_0.set_fft_window_normalized(False)
+
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_freq_sink_x_1_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_freq_sink_x_1_0_0.set_line_label(i, labels[i])
+            self.qtgui_freq_sink_x_1_0_0.set_line_width(i, widths[i])
+            self.qtgui_freq_sink_x_1_0_0.set_line_color(i, colors[i])
+            self.qtgui_freq_sink_x_1_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_freq_sink_x_1_0_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_1_0_0.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_freq_sink_x_1_0_0_win)
         self.qtgui_freq_sink_x_1_0 = qtgui.freq_sink_c(
             16384, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -621,7 +662,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\dsp\\SDR_files\\test_io\\out_File', False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-30_000), 0.5, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-12_000), 0.5, 0, 0)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, baseband_LO, 0.3, 0, 0)
         self.analog_feedforward_agc_cc_0 = analog.feedforward_agc_cc(1024, 1.55)
 
@@ -636,6 +677,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_multiply_xx_0, 0), (self.qtgui_freq_sink_x_0_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.digital_fll_band_edge_cc_0, 0))
+        self.connect((self.blocks_multiply_xx_0_0, 0), (self.qtgui_freq_sink_x_1_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.blocks_uchar_to_float_0_0_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_0_0_0, 0), (self.blocks_uchar_to_float_0_0_0_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.digital_crc32_bb_0_0, 0))
@@ -689,6 +731,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_sps(self, sps):
         self.sps = sps
         self.set_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0/float(self.sps), 0.35, 45*self.nfilts))
+        self.digital_symbol_sync_xx_0.set_sps(self.sps)
 
     def get_nfilts(self):
         return self.nfilts
@@ -721,6 +764,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0.set_frequency_range(0, (20*self.samp_rate))
         self.qtgui_freq_sink_x_0_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_freq_sink_x_1_0.set_frequency_range(0, self.samp_rate)
+        self.qtgui_freq_sink_x_1_0_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_2.set_samp_rate(self.samp_rate)
@@ -798,9 +842,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=top_block, options=None):
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()

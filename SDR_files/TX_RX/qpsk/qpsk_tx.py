@@ -6,6 +6,7 @@
 #
 # GNU Radio Python Flow Graph
 # Title: qpsk_tx
+# Author: SEAKn Space
 # Description: packet transmit
 # GNU Radio version: 3.10.8.0
 
@@ -25,7 +26,7 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import soapy
-import qpsk_tx_epy_block_0 as epy_block_0  # embedded python block
+import qpsk_tx_epy_block_0_0_0_0 as epy_block_0_0_0_0  # embedded python block
 import sip
 
 
@@ -76,7 +77,8 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
         self.sps = sps = 15
         self.rs_ratio = rs_ratio = 1.0
         self.qpsk = qpsk = digital.constellation_qpsk().base()
-        self.qpsk.set_npwr(0)
+        self.qpsk.set_npwr(1.0)
+        self.packet_len = packet_len = 64
         self.low_pass_filter_taps = low_pass_filter_taps = firdes.low_pass(1.0, samp_rate, 20000,2000, window.WIN_HAMMING, 0.35)
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.excess_bw = excess_bw = 0.35
@@ -92,13 +94,13 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
         tune_args = ['']
         settings = ['']
 
-        self.soapy_hackrf_sink_0 = soapy.sink(dev, "fc32", 1, "hackrf_clock -o 1",
+        self.soapy_hackrf_sink_0 = soapy.sink(dev, "fc32", 1, '',
                                   stream_args, tune_args, settings)
         self.soapy_hackrf_sink_0.set_sample_rate(0, 20*samp_rate)
         self.soapy_hackrf_sink_0.set_bandwidth(0, 0)
         self.soapy_hackrf_sink_0.set_frequency(0, transmit_freq)
         self.soapy_hackrf_sink_0.set_gain(0, 'AMP', False)
-        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(15, 0.0), 47.0))
+        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(40, 0.0), 47.0))
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=20,
                 decimation=1,
@@ -333,7 +335,8 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.epy_block_0 = epy_block_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test.png", Pkt_len=64, initial_packet_fill=1)
+        self.epy_block_0_0_0_0 = epy_block_0_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=10)
+        self.epy_block_0_0_0_0.set_min_output_buffer((2**16))
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(
@@ -367,7 +370,7 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_tagged_stream_mux_0, 1))
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
-        self.connect((self.epy_block_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.epy_block_0_0_0_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_time_sink_x_1, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.soapy_hackrf_sink_0, 0))
@@ -432,6 +435,13 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
 
     def set_qpsk(self, qpsk):
         self.qpsk = qpsk
+
+    def get_packet_len(self):
+        return self.packet_len
+
+    def set_packet_len(self, packet_len):
+        self.packet_len = packet_len
+        self.epy_block_0_0_0_0.Pkt_len = self.packet_len
 
     def get_low_pass_filter_taps(self):
         return self.low_pass_filter_taps
