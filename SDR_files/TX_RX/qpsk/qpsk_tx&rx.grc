@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: top_block
+    id: qpsk_txrx
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -1031,36 +1031,35 @@ blocks:
       \ e_len\n\n                if (self._debug):\n                    # print (\"\
       Length of input:\",len(input_items[0]))                    \n              \
       \      print (\"Length of output:\",len(output_items[0]))\n\n\n            \
-      \    i = 0\n                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
-      \                    # if (i == 63):\n                    #     print(\"i\"\
-      ,encoded[i])\n                    output_items[0][i] = encoded[i]\n        \
-      \            # print(\"i\",i)\n                    i += 1\n\n              \
-      \  if(len(output_items[0])<len(encoded)):\n                    print(\"GNU Radio\
-      \ Buffer Overflow\")\n                    print(\"Try Decreasing Input File\
-      \ Size or Increasing Minoutput Buffer\")\n                    return 0\n   \
-      \             return (e_len)\n\n        elif (self.state == 3):\n          \
-      \  if (self._debug):\n                print(\"State 3\")\n            # send\
-      \ file name\n            fn_len = len (self.FileName)\n            key1 = pmt.intern(\"\
-      packet_len\")\n            val1 = pmt.from_long(fn_len+8)\n            self.add_item_tag(0,\
-      \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
-      \                key1,   # Key of the tag\n                val1    # Value of\
-      \ the tag\n                )\n            self.indx += (fn_len+8)\n        \
-      \    i = 0\n            while (i < 8):\n                output_items[0][i] =\
-      \ self.filler[i]\n                i += 1\n            j = 0\n            while\
-      \ (i < (fn_len+8)):\n                output_items[0][i] = ord(self.FileName[j])\n\
-      \                i += 1\n                j += 1\n            self.state = 4\n\
-      \            return (fn_len+8)\n\n        elif (self.state == 4):\n        \
-      \    # send post filler\n            if (self._debug):\n                print\
-      \ (\"State = 4 , precount =\", self.pre_count)\n            key1 = pmt.intern(\"\
-      packet_len\")\n            val1 = pmt.from_long(self.f_len)\n            self.add_item_tag(0,\
-      \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
-      \                key1,   # Key of the tag\n                val1    # Value of\
-      \ the tag\n                )\n            self.indx += self.f_len\n        \
-      \    \n            i = 0\n            while (i < self.f_len):\n            \
-      \    output_items[0][i] = self.filler[i]\n                i += 1\n         \
-      \   self.pre_count += 1\n            if (self.pre_count > 16):\n           \
-      \     self.pre_count = 0\n                self.state = 0      # idle\n     \
-      \       return (self.f_len)\n\n        return (0)\n\n"
+      \    i = 0\n                while (i < len(encoded)):\n                    #\
+      \ if (i == 63):\n                    #     print(\"i\",encoded[i])\n       \
+      \             output_items[0][i] = encoded[i]\n                    # print(\"\
+      i\",i)\n                    i += 1\n\n                if(len(output_items[0])<len(encoded)):\n\
+      \                    print(\"GNU Radio Buffer Overflow\")\n                \
+      \    print(\"Try Decreasing Input File Size or Increasing Minoutput Buffer\"\
+      )\n                    return 0\n                return (e_len)\n\n        elif\
+      \ (self.state == 3):\n            if (self._debug):\n                print(\"\
+      State 3\")\n            # send file name\n            fn_len = len (self.FileName)\n\
+      \            key1 = pmt.intern(\"packet_len\")\n            val1 = pmt.from_long(fn_len+8)\n\
+      \            self.add_item_tag(0, # Write to output port 0\n               \
+      \ self.indx,   # Index of the tag\n                key1,   # Key of the tag\n\
+      \                val1    # Value of the tag\n                )\n           \
+      \ self.indx += (fn_len+8)\n            i = 0\n            while (i < 8):\n \
+      \               output_items[0][i] = self.filler[i]\n                i += 1\n\
+      \            j = 0\n            while (i < (fn_len+8)):\n                output_items[0][i]\
+      \ = ord(self.FileName[j])\n                i += 1\n                j += 1\n\
+      \            self.state = 4\n            return (fn_len+8)\n\n        elif (self.state\
+      \ == 4):\n            # send post filler\n            if (self._debug):\n  \
+      \              print (\"State = 4 , precount =\", self.pre_count)\n        \
+      \    key1 = pmt.intern(\"packet_len\")\n            val1 = pmt.from_long(self.f_len)\n\
+      \            self.add_item_tag(0, # Write to output port 0\n               \
+      \ self.indx,   # Index of the tag\n                key1,   # Key of the tag\n\
+      \                val1    # Value of the tag\n                )\n           \
+      \ self.indx += self.f_len\n            \n            i = 0\n            while\
+      \ (i < self.f_len):\n                output_items[0][i] = self.filler[i]\n \
+      \               i += 1\n            self.pre_count += 1\n            if (self.pre_count\
+      \ > 16):\n                self.pre_count = 0\n                self.state = 0\
+      \      # idle\n            return (self.f_len)\n\n        return (0)\n\n"
     affinity: ''
     alias: ''
     comment: 'Filename is specified on the command line, e.g.:
@@ -1079,6 +1078,41 @@ blocks:
     coordinate: [16, 268.0]
     rotation: 0
     state: enabled
+- name: epy_block_0_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      import os\nimport subprocess\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Data To STD_out',   # will show up in GRC\n   \
+      \         in_sig=[np.complex64],\n            out_sig=None\n        )\n    \
+      \    # print(\"Data Starts Here:\") # print to STDOUT that the data starts here\n\
+      \        # if an attribute with the same name as a parameter is found,\n   \
+      \     # a callback is registered (properties work, too).\n        # self.example_param\
+      \ = example_param\n\n    def work(self, input_items, output_items): # work(self,\
+      \ input_items, output_items):\n        \"\"\"example: multiply with constant\"\
+      \"\"\n        print(input_items) # print to STDOUT the file data\n        return\
+      \ 0\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Data To STD_out', 'blk', [], [('0', 'complex', 1)], [], 'Embedded
+      Python Block example - a simple multiply const', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 920.0]
+    rotation: 0
+    state: disabled
 - name: low_pass_filter_0
   id: low_pass_filter
   parameters:
@@ -2522,9 +2556,33 @@ blocks:
     coordinate: [1392, 124.0]
     rotation: 0
     state: disabled
+- name: zeromq_pub_sink_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:5000
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 960.0]
+    rotation: 0
+    state: true
 
 connections:
 - [analog_feedforward_agc_cc_0, '0', digital_symbol_sync_xx_0, '0']
+- [analog_feedforward_agc_cc_0, '0', epy_block_0_1, '0']
+- [analog_feedforward_agc_cc_0, '0', zeromq_pub_sink_0, '0']
 - [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
 - [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
 - [blocks_delay_0, '0', qtgui_time_sink_x_0_1, '0']

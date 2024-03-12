@@ -24,13 +24,13 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+from gnuradio import zeromq
+import qpsk_txrx_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
 import sip
-import top_block_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
-import top_block_epy_block_0_1 as epy_block_0_1  # embedded python block
 
 
 
-class top_block(gr.top_block, Qt.QWidget):
+class qpsk_txrx(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "QPSK Send and Receive", catch_exceptions=True)
@@ -53,7 +53,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "top_block")
+        self.settings = Qt.QSettings("GNU Radio", "qpsk_txrx")
 
         try:
             geometry = self.settings.value("geometry")
@@ -86,6 +86,7 @@ class top_block(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
+        self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:5000', 100, False, (-1), '', True, True)
         self.rational_resampler_xxx_1_0 = filter.rational_resampler_ccc(
                 interpolation=1,
                 decimation=2,
@@ -615,7 +616,6 @@ class top_block(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0_1 = epy_block_0_1.blk()
         self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=30)
         self.epy_block_0_0_0.set_min_output_buffer((2**16))
         self.digital_symbol_sync_xx_0 = digital.symbol_sync_cc(
@@ -673,7 +673,7 @@ class top_block(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_feedforward_agc_cc_0, 0), (self.digital_symbol_sync_xx_0, 0))
-        self.connect((self.analog_feedforward_agc_cc_0, 0), (self.epy_block_0_1, 0))
+        self.connect((self.analog_feedforward_agc_cc_0, 0), (self.zeromq_pub_sink_0, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_multiply_xx_0_0, 1))
         self.connect((self.blocks_delay_0, 0), (self.qtgui_time_sink_x_0_1, 0))
@@ -721,7 +721,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "top_block")
+        self.settings = Qt.QSettings("GNU Radio", "qpsk_txrx")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -843,7 +843,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=top_block, options=None):
+def main(top_block_cls=qpsk_txrx, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 
