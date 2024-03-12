@@ -1,12 +1,14 @@
 import os
 import time
 import sys
-import cv2
+import subprocess
+import signal
 
 #grab systems args
 fn = sys.argv[1]
 out = sys.argv[2]
 prev_time = os.path.getmtime(fn)# get the last modifed time of the file
+thread = subprocess.Popen(["python","C:/Users/tavei/OneDrive/Documents/GitHub/dsp/SDR_files/TX_RX/bpsk/bpsk_rx.py"])
 
 #Loop that keeps track of the file
 while True:
@@ -20,5 +22,7 @@ while True:
                 t_start = time.time()
                 prev_time=t
         os.system("python3 .\strip_preamble.py {} {}".format(fn,out))#stip the preamble
+        os.kill(thread.pid,0)
+
         print("Thing Happend ;)")
-        prev_time = t
+        prev_time = os.path.getmtime(fn)
