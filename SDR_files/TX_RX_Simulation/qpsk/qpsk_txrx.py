@@ -24,7 +24,7 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-import qpsk_txrx_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
+import qpsk_txrx_orginal_EPB as orginal_EPB  # embedded python block
 import sip
 
 
@@ -605,6 +605,8 @@ class qpsk_txrx(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
+        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/test.png", Pkt_len=64, initial_packet_fill=30)
+        self.orginal_EPB.set_min_output_buffer((2**16))
         self.low_pass_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(
@@ -614,8 +616,6 @@ class qpsk_txrx(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=30)
-        self.epy_block_0_0_0.set_min_output_buffer((2**16))
         self.digital_symbol_sync_xx_0 = digital.symbol_sync_cc(
             digital.TED_SIGNUM_TIMES_SLOPE_ML,
             sps,
@@ -706,10 +706,10 @@ class qpsk_txrx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_map_bb_0_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
         self.connect((self.digital_symbol_sync_xx_0, 0), (self.digital_costas_loop_cc_0, 0))
-        self.connect((self.epy_block_0_0_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_feedforward_agc_cc_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.orginal_EPB, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_1, 0), (self.blocks_multiply_xx_0_0, 0))
@@ -797,7 +797,6 @@ class qpsk_txrx(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.epy_block_0_0_0.Pkt_len = self.packet_len
 
     def get_hdr_format(self):
         return self.hdr_format

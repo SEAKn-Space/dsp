@@ -24,9 +24,6 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import soapy
-import osmosdr
-import time
 import sip
 import top_block_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
 
@@ -85,35 +82,11 @@ class top_block(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.soapy_hackrf_sink_0_0 = None
-        dev = 'driver=hackrf'
-        stream_args = ''
-        tune_args = ['']
-        settings = ['']
-
-        self.soapy_hackrf_sink_0_0 = soapy.sink(dev, "fc32", 1, '',
-                                  stream_args, tune_args, settings)
-        self.soapy_hackrf_sink_0_0.set_sample_rate(0, 20*samp_rate)
-        self.soapy_hackrf_sink_0_0.set_bandwidth(0, 0)
-        self.soapy_hackrf_sink_0_0.set_frequency(0, carrier_freq)
-        self.soapy_hackrf_sink_0_0.set_gain(0, 'AMP', False)
-        self.soapy_hackrf_sink_0_0.set_gain(0, 'VGA', min(max(25, 0.0), 47.0))
-        self.rtlsdr_source_0 = osmosdr.source(
-            args="numchan=" + str(1) + " " + ''
-        )
-        self.rtlsdr_source_0.set_clock_source('internal', 0)
-        self.rtlsdr_source_0.set_time_unknown_pps(osmosdr.time_spec_t())
-        self.rtlsdr_source_0.set_sample_rate(rtl_samp_rate)
-        self.rtlsdr_source_0.set_center_freq(carrier_freq, 0)
-        self.rtlsdr_source_0.set_freq_corr(0, 0)
-        self.rtlsdr_source_0.set_dc_offset_mode(2, 0)
-        self.rtlsdr_source_0.set_iq_balance_mode(2, 0)
-        self.rtlsdr_source_0.set_gain_mode(True, 0)
-        self.rtlsdr_source_0.set_gain(20, 0)
-        self.rtlsdr_source_0.set_if_gain(20, 0)
-        self.rtlsdr_source_0.set_bb_gain(20, 0)
-        self.rtlsdr_source_0.set_antenna('', 0)
-        self.rtlsdr_source_0.set_bandwidth(0, 0)
+        self.rational_resampler_xxx_1_0 = filter.rational_resampler_ccc(
+                interpolation=1,
+                decimation=2,
+                taps=[],
+                fractional_bw=0)
         self.rational_resampler_xxx_1 = filter.rational_resampler_ccc(
                 interpolation=1,
                 decimation=10,
@@ -596,7 +569,7 @@ class top_block(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test.png", Pkt_len=packet_len, initial_packet_fill=100)
+        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=10)
         self.epy_block_0_0_0.set_min_output_buffer((2**16))
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_pfb_clock_sync_xxx_0 = digital.pfb_clock_sync_ccf(sps, .062, rrc_taps, nfilts, (nfilts/2), 1.5, 1)
@@ -622,6 +595,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_uchar_to_float_0_0_0_0 = blocks.uchar_to_float()
         self.blocks_uchar_to_float_0_0_0 = blocks.uchar_to_float()
         self.blocks_uchar_to_float_0_0 = blocks.uchar_to_float()
+        self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, (20*samp_rate), True, 0 if "auto" == "auto" else max( int(float(0.1) * (20*samp_rate)) if "auto" == "time" else int(0.1), 1) )
         self.blocks_tagged_stream_mux_0 = blocks.tagged_stream_mux(gr.sizeof_char*1, 'packet_len', 0)
         self.blocks_repack_bits_bb_1_0 = blocks.repack_bits_bb(1, 8, "packet_len", False, gr.GR_MSB_FIRST)
         self.blocks_repack_bits_bb_0_0_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_MSB_FIRST)
@@ -631,7 +605,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-18_000), 0.5, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-30_000), 0.5, 0, 0)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, baseband_LO, 0.3, 0, 0)
         self.analog_feedforward_agc_cc_0 = analog.feedforward_agc_cc(1024, 1.55)
 
@@ -650,6 +624,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_repack_bits_bb_0_0_0, 0), (self.blocks_uchar_to_float_0_0_0_0_0, 0))
         self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.digital_crc32_bb_0_0, 0))
         self.connect((self.blocks_tagged_stream_mux_0, 0), (self.digital_constellation_modulator_0, 0))
+        self.connect((self.blocks_throttle2_0, 0), (self.rational_resampler_xxx_1_0, 0))
         self.connect((self.blocks_uchar_to_float_0_0, 0), (self.qtgui_time_sink_x_0_2, 0))
         self.connect((self.blocks_uchar_to_float_0_0_0, 0), (self.qtgui_time_sink_x_0_0, 0))
         self.connect((self.blocks_uchar_to_float_0_0_0_0, 0), (self.blocks_delay_0, 0))
@@ -676,11 +651,11 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.low_pass_filter_0, 0), (self.analog_feedforward_agc_cc_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
-        self.connect((self.rational_resampler_xxx_0, 0), (self.soapy_hackrf_sink_0_0, 0))
         self.connect((self.rational_resampler_xxx_1, 0), (self.blocks_multiply_xx_0_0, 0))
-        self.connect((self.rtlsdr_source_0, 0), (self.qtgui_freq_sink_x_1, 0))
-        self.connect((self.rtlsdr_source_0, 0), (self.rational_resampler_xxx_1, 0))
+        self.connect((self.rational_resampler_xxx_1_0, 0), (self.qtgui_freq_sink_x_1, 0))
+        self.connect((self.rational_resampler_xxx_1_0, 0), (self.rational_resampler_xxx_1, 0))
 
 
     def closeEvent(self, event):
@@ -724,6 +699,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.blocks_throttle2_0.set_sample_rate((20*self.samp_rate))
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 5.5e3, 1.6E3, window.WIN_HAMMING, 6.76))
         self.qtgui_freq_sink_x_0.set_frequency_range(0, (20*self.samp_rate))
         self.qtgui_freq_sink_x_0_0.set_frequency_range(0, self.samp_rate)
@@ -732,7 +708,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_2.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_1.set_samp_rate(self.samp_rate)
-        self.soapy_hackrf_sink_0_0.set_sample_rate(0, 20*self.samp_rate)
 
     def get_rtl_samp_rate(self):
         return self.rtl_samp_rate
@@ -741,7 +716,6 @@ class top_block(gr.top_block, Qt.QWidget):
         self.rtl_samp_rate = rtl_samp_rate
         self.analog_sig_source_x_0_0.set_sampling_freq((self.rtl_samp_rate/10))
         self.qtgui_freq_sink_x_1.set_frequency_range(0, self.rtl_samp_rate)
-        self.rtlsdr_source_0.set_sample_rate(self.rtl_samp_rate)
 
     def get_rrc_taps(self):
         return self.rrc_taps
@@ -768,8 +742,6 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_carrier_freq(self, carrier_freq):
         self.carrier_freq = carrier_freq
-        self.rtlsdr_source_0.set_center_freq(self.carrier_freq, 0)
-        self.soapy_hackrf_sink_0_0.set_frequency(0, self.carrier_freq)
 
     def get_baseband_LO(self):
         return self.baseband_LO

@@ -155,7 +155,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 8.0]
+    coordinate: [1208, 12.0]
     rotation: 0
     state: enabled
 - name: packet_len
@@ -191,7 +191,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 8.0]
+    coordinate: [1016, 12.0]
     rotation: 0
     state: enabled
 - name: rtl_rate
@@ -251,7 +251,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1384, 8.0]
+    coordinate: [1408, 4.0]
     rotation: 0
     state: true
 - name: analog_feedforward_agc_cc_0
