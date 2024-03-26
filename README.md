@@ -24,7 +24,7 @@ To install GNU Radio, download instructions can be found [here](https://wiki.gnu
 
 To install all needed python library dependencies run `pip install -r requirements.txt`. 
 
-### GNU Radio Block Degign and Further Resources
+### GNU Radio Block Design and Further Resources
 
 To help make the different block diagrams, official [wiki tutorials](https://wiki.gnuradio.org/index.php?title=Tutorials) were used. 
 
