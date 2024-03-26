@@ -24,13 +24,12 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+import qpsk_txrx_sim_orginal_EPB_0 as orginal_EPB_0  # embedded python block
 import sip
-import top_block_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
-import top_block_epy_block_0_1 as epy_block_0_1  # embedded python block
 
 
 
-class top_block(gr.top_block, Qt.QWidget):
+class qpsk_txrx_sim(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "QPSK Send and Receive", catch_exceptions=True)
@@ -53,7 +52,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "top_block")
+        self.settings = Qt.QSettings("GNU Radio", "qpsk_txrx_sim")
 
         try:
             geometry = self.settings.value("geometry")
@@ -606,6 +605,8 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
+        self.orginal_EPB_0 = orginal_EPB_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len)
+        self.orginal_EPB_0.set_min_output_buffer((2**16))
         self.low_pass_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(
@@ -615,9 +616,6 @@ class top_block(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0_1 = epy_block_0_1.blk()
-        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=30)
-        self.epy_block_0_0_0.set_min_output_buffer((2**16))
         self.digital_symbol_sync_xx_0 = digital.symbol_sync_cc(
             digital.TED_SIGNUM_TIMES_SLOPE_ML,
             sps,
@@ -664,7 +662,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\dsp\\SDR_files\\test_io\\out_File', False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-12_000), 0.5, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-baseband_LO), 0.5, 0, 0)
         self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_SIN_WAVE, baseband_LO, 0.3, 0, 0)
         self.analog_feedforward_agc_cc_0 = analog.feedforward_agc_cc(1024, 1.55)
 
@@ -673,7 +671,6 @@ class top_block(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_feedforward_agc_cc_0, 0), (self.digital_symbol_sync_xx_0, 0))
-        self.connect((self.analog_feedforward_agc_cc_0, 0), (self.epy_block_0_1, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_multiply_xx_0_0, 1))
         self.connect((self.blocks_delay_0, 0), (self.qtgui_time_sink_x_0_1, 0))
@@ -709,10 +706,10 @@ class top_block(gr.top_block, Qt.QWidget):
         self.connect((self.digital_map_bb_0_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
         self.connect((self.digital_symbol_sync_xx_0, 0), (self.digital_costas_loop_cc_0, 0))
-        self.connect((self.epy_block_0_0_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.analog_feedforward_agc_cc_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.orginal_EPB_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_1, 0), (self.blocks_multiply_xx_0_0, 0))
@@ -721,7 +718,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "top_block")
+        self.settings = Qt.QSettings("GNU Radio", "qpsk_txrx_sim")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -800,7 +797,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.epy_block_0_0_0.Pkt_len = self.packet_len
+        self.orginal_EPB_0.Pkt_len = self.packet_len
 
     def get_hdr_format(self):
         return self.hdr_format
@@ -832,6 +829,7 @@ class top_block(gr.top_block, Qt.QWidget):
     def set_baseband_LO(self, baseband_LO):
         self.baseband_LO = baseband_LO
         self.analog_sig_source_x_0.set_frequency(self.baseband_LO)
+        self.analog_sig_source_x_0_0.set_frequency((-self.baseband_LO))
 
     def get_QPSK(self):
         return self.QPSK
@@ -843,7 +841,7 @@ class top_block(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=top_block, options=None):
+def main(top_block_cls=qpsk_txrx_sim, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 
