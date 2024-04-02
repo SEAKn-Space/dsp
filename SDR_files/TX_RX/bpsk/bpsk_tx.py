@@ -26,7 +26,7 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import soapy
-import bpsk_tx_epy_block_0_0_0 as epy_block_0_0_0  # embedded python block
+import bpsk_tx_epy_block_0 as epy_block_0  # embedded python block
 import sip
 
 
@@ -336,8 +336,7 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.epy_block_0_0_0 = epy_block_0_0_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len, initial_packet_fill=30)
-        self.epy_block_0_0_0.set_min_output_buffer((2**16))
+        self.epy_block_0 = epy_block_0.blk(FileName="../../test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(
@@ -371,7 +370,7 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
         self.connect((self.digital_crc32_bb_0, 0), (self.blocks_tagged_stream_mux_0, 1))
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_protocol_formatter_bb_0, 0), (self.blocks_tagged_stream_mux_0, 0))
-        self.connect((self.epy_block_0_0_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.epy_block_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_time_sink_x_1, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.soapy_hackrf_sink_0, 0))
@@ -442,7 +441,7 @@ class bpsk_tx(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.epy_block_0_0_0.Pkt_len = self.packet_len
+        self.epy_block_0.Pkt_len = self.packet_len
 
     def get_low_pass_filter_taps(self):
         return self.low_pass_filter_taps

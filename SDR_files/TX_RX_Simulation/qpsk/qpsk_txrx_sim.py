@@ -24,7 +24,7 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-import qpsk_txrx_sim_orginal_EPB_0 as orginal_EPB_0  # embedded python block
+import qpsk_txrx_sim_orginal_EPB as orginal_EPB  # embedded python block
 import sip
 
 
@@ -605,8 +605,7 @@ class qpsk_txrx_sim(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
-        self.orginal_EPB_0 = orginal_EPB_0.blk(FileName="../../test_io/test.png", Pkt_len=packet_len)
-        self.orginal_EPB_0.set_min_output_buffer((2**16))
+        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/HelloWorld.txt", Pkt_len=packet_len, initial_packet_fill=30)
         self.low_pass_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(
@@ -709,7 +708,7 @@ class qpsk_txrx_sim(gr.top_block, Qt.QWidget):
         self.connect((self.low_pass_filter_0, 0), (self.analog_feedforward_agc_cc_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.orginal_EPB_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.orginal_EPB, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_throttle2_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_1, 0), (self.blocks_multiply_xx_0_0, 0))
@@ -797,7 +796,7 @@ class qpsk_txrx_sim(gr.top_block, Qt.QWidget):
 
     def set_packet_len(self, packet_len):
         self.packet_len = packet_len
-        self.orginal_EPB_0.Pkt_len = self.packet_len
+        self.orginal_EPB.Pkt_len = self.packet_len
 
     def get_hdr_format(self):
         return self.hdr_format

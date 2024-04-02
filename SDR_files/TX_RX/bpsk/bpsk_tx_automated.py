@@ -46,8 +46,7 @@ class bpsk_tx_automated(gr.top_block):
         self.transmit_freq = transmit_freq = 435e6
         self.sps = sps = 15
         self.rs_ratio = rs_ratio = 1.0
-        self.packet_len_0 = packet_len_0 = 64
-        self.packet_len = packet_len = 64
+        self.packet_len = packet_len = 52
         self.low_pass_filter_taps = low_pass_filter_taps = firdes.low_pass(1.0, samp_rate, 20000,2000, window.WIN_HAMMING, 0.35)
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.excess_bw = excess_bw = 0.35
@@ -77,7 +76,7 @@ class bpsk_tx_automated(gr.top_block):
                 decimation=1,
                 taps=[],
                 fractional_bw=0)
-        self.epy_block_0 = epy_block_0.blk(FileName="./SDR_files/test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=30)
+        self.epy_block_0 = epy_block_0.blk(FileName="./SDR_files/test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=64)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(
@@ -151,12 +150,6 @@ class bpsk_tx_automated(gr.top_block):
 
     def set_rs_ratio(self, rs_ratio):
         self.rs_ratio = rs_ratio
-
-    def get_packet_len_0(self):
-        return self.packet_len_0
-
-    def set_packet_len_0(self, packet_len_0):
-        self.packet_len_0 = packet_len_0
 
     def get_packet_len(self):
         return self.packet_len

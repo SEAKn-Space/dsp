@@ -67,7 +67,7 @@ class blk(gr.sync_block):
             if (self._debug):
                 print("State 0")
             # idle
-            return -1
+            return (0)
 
         elif (self.state == 1):
             # send preamble
@@ -83,18 +83,12 @@ class blk(gr.sync_block):
             self.indx += self.c_len
             
             i = 0
-            j = 0
-            while(j<self.initial_packet_fill*self.c_len):
-                i = 0
-                while (i < self.c_len):
-                    output_items[0][j] = self.char_list[i]
-                    i += 1
-                    j += 1
-                
-                self.pre_count += 1
-
-
-            if (self.pre_count > 64):
+            while (i < self.c_len):
+                output_items[0][i] = self.char_list[i]
+                i += 1
+            
+            self.pre_count += 1
+            if (self.pre_count > self.initial_packet_fill):
                 self.pre_count = 0
                 self.state = 2      # send msg
             return (self.c_len)
@@ -108,7 +102,7 @@ class blk(gr.sync_block):
                 # if (self._debug):
                 #     print ('buff length =', b_len, 'buff:', buff)
                 if b_len == 0:
-                    # print ('End of file')
+                    print ('End of file')
                     self._eof = True
                     self.f_in.close()
                     self.state = 3      # send file name
@@ -174,7 +168,7 @@ class blk(gr.sync_block):
             return (fn_len+8)
 
         elif (self.state == 4):
-            # send post fillers
+            # send post filler
             if (self._debug):
                 print ("State = 4 , precount =", self.pre_count)
             key1 = pmt.intern("packet_len")

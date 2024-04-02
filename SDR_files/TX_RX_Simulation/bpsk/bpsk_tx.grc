@@ -434,24 +434,6 @@ blocks:
     coordinate: [776, 352.0]
     rotation: 0
     state: enabled
-- name: mmse_resampler_xx_0_0
-  id: mmse_resampler_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    phase_shift: '0'
-    resamp_ratio: 1.0/((usrp_rate/samp_rate)*rs_ratio)
-    type: complex
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1408, 584.0]
-    rotation: 0
-    state: disabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:

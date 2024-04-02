@@ -418,32 +418,31 @@ blocks:
       \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
       \                key1,   # Key of the tag\n                val1    # Value of\
       \ the tag\n                )\n            self.indx += self.c_len\n        \
-      \    \n            i = 0\n            j = 0\n            while(j<self.initial_packet_fill*self.c_len):\n\
-      \                i = 0\n                while (i < self.c_len):\n          \
-      \          output_items[0][j] = self.char_list[i]\n                    i +=\
-      \ 1\n                    j += 1\n                \n                self.pre_count\
-      \ += 1\n\n\n            if (self.pre_count > 64):\n                self.pre_count\
-      \ = 0\n                self.state = 2      # send msg\n            return (self.c_len)\n\
-      \n        elif (self.state == 2):\n            if (self._debug):\n         \
-      \       print(\"State 2\")\n            while (not (self._eof)):\n         \
-      \       buff = self.f_in.read(self.Pkt_len)\n                b_len = len(buff)\n\
-      \                # if (self._debug):\n                #     print ('buff length\
-      \ =', b_len, 'buff:', buff)\n                if b_len == 0:\n              \
-      \      print ('End of file')\n                    self._eof = True\n       \
-      \             self.f_in.close()\n                    self.state = 3      # send\
-      \ file name\n                    self.pre_count = 0\n                    break\n\
-      \                # convert to Base64\n                encoded = base64.b64encode\
-      \ (buff)\n                e_len = len(encoded)\n                # if (self._debug):\n\
-      \                #     print ('b64 length =', e_len)\n                #    \
-      \ print('encoded:', encoded)\n                key0 = pmt.intern(\"packet_len\"\
-      )\n                val0 = pmt.from_long(e_len)\n                self.add_item_tag(0,\
-      \ # Write to output port 0\n                    self.indx,   # Index of the\
-      \ tag\n                    key0,   # Key of the tag\n                    val0\
-      \    # Value of the tag\n                    )\n                self.indx +=\
-      \ e_len\n\n                if (self._debug):\n                    # print (\"\
-      Length of input:\",len(input_items[0]))                    \n              \
-      \      print (\"Length of output:\",len(output_items[0]))\n\n\n            \
-      \    i = 0\n                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
+      \    \n            i = 0\n            while (i < self.c_len):\n            \
+      \    output_items[0][i] = self.char_list[i]\n                i += 1\n      \
+      \      \n            self.pre_count += 1\n            if (self.pre_count > self.initial_packet_fill):\n\
+      \                self.pre_count = 0\n                self.state = 2      # send\
+      \ msg\n            return (self.c_len)\n\n        elif (self.state == 2):\n\
+      \            if (self._debug):\n                print(\"State 2\")\n       \
+      \     while (not (self._eof)):\n                buff = self.f_in.read(self.Pkt_len)\n\
+      \                b_len = len(buff)\n                # if (self._debug):\n  \
+      \              #     print ('buff length =', b_len, 'buff:', buff)\n       \
+      \         if b_len == 0:\n                    print ('End of file')\n      \
+      \              self._eof = True\n                    self.f_in.close()\n   \
+      \                 self.state = 3      # send file name\n                   \
+      \ self.pre_count = 0\n                    break\n                # convert to\
+      \ Base64\n                encoded = base64.b64encode (buff)\n              \
+      \  e_len = len(encoded)\n                # if (self._debug):\n             \
+      \   #     print ('b64 length =', e_len)\n                #     print('encoded:',\
+      \ encoded)\n                key0 = pmt.intern(\"packet_len\")\n            \
+      \    val0 = pmt.from_long(e_len)\n                self.add_item_tag(0, # Write\
+      \ to output port 0\n                    self.indx,   # Index of the tag\n  \
+      \                  key0,   # Key of the tag\n                    val0    # Value\
+      \ of the tag\n                    )\n                self.indx += e_len\n\n\
+      \                if (self._debug):\n                    # print (\"Length of\
+      \ input:\",len(input_items[0]))                    \n                    print\
+      \ (\"Length of output:\",len(output_items[0]))\n\n\n                i = 0\n\
+      \                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
       \                    # if (i == 63):\n                    #     print(\"i\"\
       ,encoded[i])\n                    output_items[0][i] = encoded[i]\n        \
       \            # print(\"i\",i)\n                    i += 1\n\n              \
@@ -490,7 +489,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 184.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
@@ -530,32 +529,31 @@ blocks:
       \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
       \                key1,   # Key of the tag\n                val1    # Value of\
       \ the tag\n                )\n            self.indx += self.c_len\n        \
-      \    \n            i = 0\n            j = 0\n            while(j<self.initial_packet_fill*self.c_len):\n\
-      \                i = 0\n                while (i < self.c_len):\n          \
-      \          output_items[0][j] = self.char_list[i]\n                    i +=\
-      \ 1\n                    j += 1\n                \n                self.pre_count\
-      \ += 1\n\n\n            if (self.pre_count > 64):\n                self.pre_count\
-      \ = 0\n                self.state = 2      # send msg\n            return (self.c_len)\n\
-      \n        elif (self.state == 2):\n            if (self._debug):\n         \
-      \       print(\"State 2\")\n            while (not (self._eof)):\n         \
-      \       buff = self.f_in.read(self.Pkt_len)\n                b_len = len(buff)\n\
-      \                # if (self._debug):\n                #     print ('buff length\
-      \ =', b_len, 'buff:', buff)\n                if b_len == 0:\n              \
-      \      print ('End of file')\n                    self._eof = True\n       \
-      \             self.f_in.close()\n                    self.state = 3      # send\
-      \ file name\n                    self.pre_count = 0\n                    break\n\
-      \                # convert to Base64\n                encoded = base64.b64encode\
-      \ (buff)\n                e_len = len(encoded)\n                # if (self._debug):\n\
-      \                #     print ('b64 length =', e_len)\n                #    \
-      \ print('encoded:', encoded)\n                key0 = pmt.intern(\"packet_len\"\
-      )\n                val0 = pmt.from_long(e_len)\n                self.add_item_tag(0,\
-      \ # Write to output port 0\n                    self.indx,   # Index of the\
-      \ tag\n                    key0,   # Key of the tag\n                    val0\
-      \    # Value of the tag\n                    )\n                self.indx +=\
-      \ e_len\n\n                if (self._debug):\n                    # print (\"\
-      Length of input:\",len(input_items[0]))                    \n              \
-      \      print (\"Length of output:\",len(output_items[0]))\n\n\n            \
-      \    i = 0\n                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
+      \    \n            i = 0\n            while (i < self.c_len):\n            \
+      \    output_items[0][i] = self.char_list[i]\n                i += 1\n      \
+      \      \n            self.pre_count += 1\n            if (self.pre_count > self.initial_packet_fill):\n\
+      \                self.pre_count = 0\n                self.state = 2      # send\
+      \ msg\n            return (self.c_len)\n\n        elif (self.state == 2):\n\
+      \            if (self._debug):\n                print(\"State 2\")\n       \
+      \     while (not (self._eof)):\n                buff = self.f_in.read(self.Pkt_len)\n\
+      \                b_len = len(buff)\n                # if (self._debug):\n  \
+      \              #     print ('buff length =', b_len, 'buff:', buff)\n       \
+      \         if b_len == 0:\n                    print ('End of file')\n      \
+      \              self._eof = True\n                    self.f_in.close()\n   \
+      \                 self.state = 3      # send file name\n                   \
+      \ self.pre_count = 0\n                    break\n                # convert to\
+      \ Base64\n                encoded = base64.b64encode (buff)\n              \
+      \  e_len = len(encoded)\n                # if (self._debug):\n             \
+      \   #     print ('b64 length =', e_len)\n                #     print('encoded:',\
+      \ encoded)\n                key0 = pmt.intern(\"packet_len\")\n            \
+      \    val0 = pmt.from_long(e_len)\n                self.add_item_tag(0, # Write\
+      \ to output port 0\n                    self.indx,   # Index of the tag\n  \
+      \                  key0,   # Key of the tag\n                    val0    # Value\
+      \ of the tag\n                    )\n                self.indx += e_len\n\n\
+      \                if (self._debug):\n                    # print (\"Length of\
+      \ input:\",len(input_items[0]))                    \n                    print\
+      \ (\"Length of output:\",len(output_items[0]))\n\n\n                i = 0\n\
+      \                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
       \                    # if (i == 63):\n                    #     print(\"i\"\
       ,encoded[i])\n                    output_items[0][i] = encoded[i]\n        \
       \            # print(\"i\",i)\n                    i += 1\n\n              \
@@ -642,32 +640,31 @@ blocks:
       \ # Write to output port 0\n                self.indx,   # Index of the tag\n\
       \                key1,   # Key of the tag\n                val1    # Value of\
       \ the tag\n                )\n            self.indx += self.c_len\n        \
-      \    \n            i = 0\n            j = 0\n            while(j<self.initial_packet_fill*self.c_len):\n\
-      \                i = 0\n                while (i < self.c_len):\n          \
-      \          output_items[0][j] = self.char_list[i]\n                    i +=\
-      \ 1\n                    j += 1\n                \n                self.pre_count\
-      \ += 1\n\n\n            if (self.pre_count > 64):\n                self.pre_count\
-      \ = 0\n                self.state = 2      # send msg\n            return (self.c_len)\n\
-      \n        elif (self.state == 2):\n            if (self._debug):\n         \
-      \       print(\"State 2\")\n            while (not (self._eof)):\n         \
-      \       buff = self.f_in.read(self.Pkt_len)\n                b_len = len(buff)\n\
-      \                # if (self._debug):\n                #     print ('buff length\
-      \ =', b_len, 'buff:', buff)\n                if b_len == 0:\n              \
-      \      print ('End of file')\n                    self._eof = True\n       \
-      \             self.f_in.close()\n                    self.state = 3      # send\
-      \ file name\n                    self.pre_count = 0\n                    break\n\
-      \                # convert to Base64\n                encoded = base64.b64encode\
-      \ (buff)\n                e_len = len(encoded)\n                # if (self._debug):\n\
-      \                #     print ('b64 length =', e_len)\n                #    \
-      \ print('encoded:', encoded)\n                key0 = pmt.intern(\"packet_len\"\
-      )\n                val0 = pmt.from_long(e_len)\n                self.add_item_tag(0,\
-      \ # Write to output port 0\n                    self.indx,   # Index of the\
-      \ tag\n                    key0,   # Key of the tag\n                    val0\
-      \    # Value of the tag\n                    )\n                self.indx +=\
-      \ e_len\n\n                if (self._debug):\n                    # print (\"\
-      Length of input:\",len(input_items[0]))                    \n              \
-      \      print (\"Length of output:\",len(output_items[0]))\n\n\n            \
-      \    i = 0\n                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
+      \    \n            i = 0\n            while (i < self.c_len):\n            \
+      \    output_items[0][i] = self.char_list[i]\n                i += 1\n      \
+      \      \n            self.pre_count += 1\n            if (self.pre_count > self.initial_packet_fill):\n\
+      \                self.pre_count = 0\n                self.state = 2      # send\
+      \ msg\n            return (self.c_len)\n\n        elif (self.state == 2):\n\
+      \            if (self._debug):\n                print(\"State 2\")\n       \
+      \     while (not (self._eof)):\n                buff = self.f_in.read(self.Pkt_len)\n\
+      \                b_len = len(buff)\n                # if (self._debug):\n  \
+      \              #     print ('buff length =', b_len, 'buff:', buff)\n       \
+      \         if b_len == 0:\n                    print ('End of file')\n      \
+      \              self._eof = True\n                    self.f_in.close()\n   \
+      \                 self.state = 3      # send file name\n                   \
+      \ self.pre_count = 0\n                    break\n                # convert to\
+      \ Base64\n                encoded = base64.b64encode (buff)\n              \
+      \  e_len = len(encoded)\n                # if (self._debug):\n             \
+      \   #     print ('b64 length =', e_len)\n                #     print('encoded:',\
+      \ encoded)\n                key0 = pmt.intern(\"packet_len\")\n            \
+      \    val0 = pmt.from_long(e_len)\n                self.add_item_tag(0, # Write\
+      \ to output port 0\n                    self.indx,   # Index of the tag\n  \
+      \                  key0,   # Key of the tag\n                    val0    # Value\
+      \ of the tag\n                    )\n                self.indx += e_len\n\n\
+      \                if (self._debug):\n                    # print (\"Length of\
+      \ input:\",len(input_items[0]))                    \n                    print\
+      \ (\"Length of output:\",len(output_items[0]))\n\n\n                i = 0\n\
+      \                while (i < len(encoded) and len(output_items[0])>=len(encoded)):\n\
       \                    # if (i == 63):\n                    #     print(\"i\"\
       ,encoded[i])\n                    output_items[0][i] = encoded[i]\n        \
       \            # print(\"i\",i)\n                    i += 1\n\n              \
@@ -714,7 +711,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 344.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -1218,6 +1215,28 @@ blocks:
     coordinate: [112, 496.0]
     rotation: 0
     state: true
+- name: zeromq_pub_sink_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:49203
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: USRP sample rate = 768kHz
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1296, 792.0]
+    rotation: 0
+    state: disabled
 
 connections:
 - [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
@@ -1238,6 +1257,7 @@ connections:
 - [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [rational_resampler_xxx_0, '0', qtgui_time_sink_x_1, '0']
 - [rational_resampler_xxx_0, '0', soapy_hackrf_sink_0, '0']
+- [rational_resampler_xxx_0, '0', zeromq_pub_sink_0, '0']
 - [virtual_source_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [virtual_source_0, '0', digital_constellation_modulator_0, '0']
 

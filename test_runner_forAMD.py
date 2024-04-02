@@ -62,38 +62,12 @@ def exec_async(dpu, tensor_buffers_dict):
 
 
 def load_data(datafile):
-    int_rand = random.randint(0, 994)
+    with np.load(datafile, allow_pickle=True) as data:
+        data_in = data['data']
 
-    # Load in real data from the provided file
-    data = pd.read_pickle(datafile, compression="infer")
-    qpsk_data = data[("QPSK", 2)]
-    bpsk_data = data[("BPSK", 2)]
-
-    b_sample = bpsk_data[int_rand : int_rand + 6, :, :].reshape(6, 1, 128, 2)
-    q_sample = qpsk_data[int_rand : int_rand + 6, :, :].reshape(6, 1, 128, 2)
-
-    sample = q_sample
-
-    new_sample = np.empty((6, 1, 128, 2), dtype="float32")
-
-    for i, s in enumerate(sample):
-        new_sample[i] = norm_sample(s[0])
-
-    return new_sample
-
-
-def norm_sample(samp):
-
-    real = samp[:, 0]
-    imag = samp[:, 1]
-
-    return np.array(
-        [
-            2 * (real - min(real) / (max(real) - min(real) + 1e-10)) - 1,
-            2 * (imag - min(imag) / (max(imag) - min(imag) + 1e-10)) - 1,
-        ]
-    ).reshape(1, 128, 2)
-
+    new_arr = np.zeros((6,1,128,2), dtype='float32')
+    new_arr[0] = data_in[0].reshape(6,1,128,2)
+    return new_arr
 
 if __name__ == "__main__":
     args = parse_args()
