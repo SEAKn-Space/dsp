@@ -465,7 +465,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '64'
+    initial_packet_fill: '100'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:

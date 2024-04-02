@@ -311,7 +311,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: C:\Users\natha\dsp\SDR_files\test_io\out_File
+    file: '"../../test_io/out_File"'
     type: byte
     unbuffered: 'True'
     vlen: '1'
@@ -2192,8 +2192,6 @@ connections:
 - [low_pass_filter_0, '0', analog_feedforward_agc_cc_0, '0']
 - [low_pass_filter_0, '0', qtgui_freq_sink_x_1_0, '0']
 - [low_pass_filter_0, '0', qtgui_time_sink_x_0, '0']
-- [orginal_EPB, '0', digital_crc32_bb_0, '0']
-- [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [rational_resampler_xxx_0, '0', blocks_throttle2_0, '0']
 - [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
