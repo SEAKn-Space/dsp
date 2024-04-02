@@ -85,7 +85,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.qpsk = qpsk = digital.constellation_qpsk().base()
         self.qpsk.set_npwr(1.0)
         self.phase_bw = phase_bw = 0.0628
-        self.packet_len = packet_len = 64
+        self.packet_len = packet_len = 52
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.hackrf_rate = hackrf_rate = 20*samp_rate
         self.excess_bw = excess_bw = 0.35
