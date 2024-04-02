@@ -1218,6 +1218,28 @@ blocks:
     coordinate: [112, 496.0]
     rotation: 0
     state: true
+- name: zeromq_pub_sink_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:49203
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: USRP sample rate = 768kHz
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1296, 792.0]
+    rotation: 0
+    state: disabled
 
 connections:
 - [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
@@ -1238,6 +1260,7 @@ connections:
 - [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [rational_resampler_xxx_0, '0', qtgui_time_sink_x_1, '0']
 - [rational_resampler_xxx_0, '0', soapy_hackrf_sink_0, '0']
+- [rational_resampler_xxx_0, '0', zeromq_pub_sink_0, '0']
 - [virtual_source_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [virtual_source_0, '0', digital_constellation_modulator_0, '0']
 
