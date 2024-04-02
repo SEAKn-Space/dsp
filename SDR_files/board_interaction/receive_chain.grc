@@ -172,7 +172,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '32'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
@@ -605,7 +605,7 @@ blocks:
     bus_structure: null
     coordinate: [512, 652.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: low_pass_filter_0
   id: low_pass_filter
   parameters:

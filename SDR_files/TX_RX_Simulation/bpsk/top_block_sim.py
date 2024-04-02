@@ -71,7 +71,7 @@ class top_block_sim(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate = 100000
         self.rtl_samp_rate = rtl_samp_rate = 1.0e6
         self.rrc_taps = rrc_taps = firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(sps), 0.35, 45*nfilts)
-        self.packet_len = packet_len = 64
+        self.packet_len = packet_len = 52
         self.hdr_format = hdr_format = digital.header_format_default(access_key,0)
         self.carrier_freq = carrier_freq = 0435e6
         self.baseband_LO = baseband_LO = 30e3
@@ -560,7 +560,7 @@ class top_block_sim(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
-        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/HelloWorld.txt", Pkt_len=packet_len, initial_packet_fill=1)
+        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=64)
         self.low_pass_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(

@@ -35,7 +35,6 @@ from qpsk_demod import qpsk_demod  # grc-generated hier_block
 import osmosdr
 import time
 import receive_chain_epy_block_0 as epy_block_0  # embedded python block
-import receive_chain_epy_block_1 as epy_block_1  # embedded python block
 import sip
 
 
@@ -77,7 +76,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         ##################################################
         self.sps = sps = 15
         self.samp_rate = samp_rate = 100e3
-        self.nfilts = nfilts = 32
+        self.nfilts = nfilts = 64
         self.access_key = access_key = '11100001010110101110100010010011'
         self.transmit_freq = transmit_freq = 435e6
         self.thresh = thresh = 1
@@ -344,7 +343,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_1 = epy_block_1.blk(demod_selector=demod_selector)
         self.epy_block_0 = epy_block_0.blk(save_file="calla.npy")
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
         self.bpsk_demod_1 = bpsk_demod(
@@ -516,7 +514,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.blocks_selector_1.set_input_index(self.demod_selector)
         self.blocks_selector_1_0.set_input_index(self.demod_selector)
         self.blocks_selector_3.set_output_index(self.demod_selector)
-        self.epy_block_1.demod_selector = self.demod_selector
 
     def get_carrier_freq(self):
         return self.carrier_freq
