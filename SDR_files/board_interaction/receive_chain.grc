@@ -67,7 +67,7 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: '0'
+    start: '-50_000'
     step: '100'
     stop: '50_000'
     value: '19_000'
@@ -172,7 +172,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '25'
+    value: '32'
   states:
     bus_sink: false
     bus_source: false
@@ -378,6 +378,26 @@ blocks:
     coordinate: [632, 408.0]
     rotation: 0
     state: enabled
+- name: blocks_repack_bits
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: MSB
+    endianness: gr.GR_MSB_FIRST
+    k: '8'
+    l: '1'
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1040, 1076.0]
+    rotation: 0
+    state: true
 - name: blocks_selector_1
   id: blocks_selector
   parameters:
@@ -447,6 +467,21 @@ blocks:
     coordinate: [328, 872.0]
     rotation: 0
     state: true
+- name: blocks_uchar_to_float
+  id: blocks_uchar_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1248, 1096.0]
+    rotation: 0
+    state: enabled
 - name: bpsk_demod_1
   id: bpsk_demod
   parameters:
@@ -487,6 +522,88 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [800, 328.0]
+    rotation: 0
+    state: true
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      import random\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):  # other\
+      \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
+      \ Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ save_file=\"calla.np\"):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Embedded Python Block',   # will show\
+      \ up in GRC\n            in_sig=[np.complex64],\n            out_sig=None\n\
+      \            # out_sig=[np.complex64]\n        )\n        # if an attribute\
+      \ with the same name as a parameter is found,\n        # a callback is registered\
+      \ (properties work, too).\n        self.save_file = save_file \n\n    def work(self,\
+      \ input_items, output_items):\n        \"\"\"example: multiply with constant\"\
+      \"\"\n        # output_items[0][:] = input_items[0] * self.example_param\n\n\
+      \        mystery_num = random.randint(1,1_000)\n        if(mystery_num == 1):\n\
+      \            # print(\"Data ,\", input_items[0])\n            # print(type(input_items))\n\
+      \            # print(len(input_items))\n            if (len(input_items[0])\
+      \ >= 128):\n                start = random.randint(0, len(input_items[0])-128)\n\
+      \                data = input_items[0][start:start+128]\n                # output_items[0]\
+      \ = data\n                print(data)\n                # data.tofile(self.save_file)\n\
+      \                np.save(self.save_file, data, allow_pickle=True)\n        \
+      \        \n        return len(input_items[0])\n        # return (len(output_items[0]))"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    save_file: '"calla.npy"'
+  states:
+    _io_cache: ('Embedded Python Block', 'blk', [('save_file', "'calla.np'")], [('0',
+      'complex', 1)], [], 'Embedded Python Block example - a simple multiply const',
+      ['save_file'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1312, 476.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\nimport pmt\nimport time\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"'Demodulation Scheme Select From Board'\"\"\"\n\n    def __init__(self, demod_selector=True):\
+      \  # only default arguments here\n        \"\"\"'Demodulation Scheme Select\
+      \ From Board'\"\"\"\n        gr.sync_block.__init__(\n            self,\n  \
+      \          name='Demodulation Scheme Select From Board',   # will show up in\
+      \ GRC\n            in_sig=None,\n            out_sig=None\n        )\n     \
+      \   # if an attribute with the same name as a parameter is found,\n        #\
+      \ a callback is registered (properties work, too).\n        self.portName =\
+      \ \"demod_select\"\n        self.message_port_register_out(pmt.intern(self.portName))\n\
+      \n        self.demod_selector = demod_selector\n\n    def work(self, input_items,\
+      \ output_items):\n        \n        print(\"Random number: \", rand)\n     \
+      \   rand = np.random.randint(2)\n        time.sleep(0.1)\n        self.demod_selector\
+      \ = rand\n        PMT_msg = pmt.from_bool(self.rand)\n        self.message_port_pub(pmt.intern(self.portName),\
+      \ PMT_msg)\n\n        return (input_items[0])\n\n    # def handle_msg(self,\
+      \ msg):\n    #     self.selector = pmt.to_bool(msg)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    demod_selector: demod_selector
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Demodulation Scheme Select From Board', 'blk', [('demod_selector',
+      'True')], [], [('demod_select', 'message', 1)], "'Demodulation Scheme Select
+      From Board'", ['demod_selector'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 652.0]
     rotation: 0
     state: true
 - name: low_pass_filter_0
@@ -563,7 +680,7 @@ blocks:
     color9: '"red"'
     comment: 0,2,1,2
     grid: 'False'
-    gui_hint: ''
+    gui_hint: 5,0,1,4
     label1: ''
     label10: ''
     label2: ''
@@ -788,6 +905,103 @@ blocks:
     coordinate: [1312, 184.0]
     rotation: 0
     state: true
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: 1,2,1,2
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: 6,0,1,4
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: Correlate Output
+    nconnections: '1'
+    size: '256'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0.0'
+    tr_level: '0.1'
+    tr_mode: qtgui.TRIG_MODE_TAG
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '"packet_len"'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1.1'
+    ymin: '-0.1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1464, 1056.0]
+    rotation: 0
+    state: enabled
 - name: rational_resampler_xxx_0
   id: rational_resampler_xxx
   parameters:
@@ -1191,19 +1405,46 @@ blocks:
     coordinate: [64, 912.0]
     rotation: 0
     state: true
+- name: zeromq_sub_source_0
+  id: zeromq_sub_source
+  parameters:
+    address: tcp://127.0.0.1:49203
+    affinity: ''
+    alias: ''
+    bind: 'False'
+    comment: USRP sample rate = 768kHz
+    hwm: '-1'
+    key: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 696.0]
+    rotation: 0
+    state: disabled
 
 connections:
 - [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
 - [analog_sig_source_x_0_0_0, '0', qtgui_freq_sink_x_1, '0']
 - [analog_sig_source_x_0_0_0, '0', rational_resampler_xxx_0, '0']
 - [blocks_multiply_xx_0_0, '0', digital_fll_band_edge_cc_0, '0']
+- [blocks_repack_bits, '0', blocks_uchar_to_float, '0']
 - [blocks_selector_1, '0', blocks_file_sink_0, '0']
+- [blocks_selector_1, '0', blocks_repack_bits, '0']
 - [blocks_selector_1_0, '0', qtgui_const_sink_x_0_0, '0']
 - [blocks_selector_3, '0', bpsk_demod_1, '0']
 - [blocks_selector_3, '1', qpsk_demod_0, '0']
+- [blocks_uchar_to_float, '0', qtgui_time_sink_x_0_0, '0']
 - [bpsk_demod_1, '0', blocks_selector_1, '0']
 - [bpsk_demod_1, '1', blocks_selector_1_0, '0']
 - [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
+- [low_pass_filter_0, '0', epy_block_0, '0']
 - [low_pass_filter_0, '0', qtgui_freq_sink_x_1_0, '0']
 - [low_pass_filter_0, '0', virtual_sink_0, '0']
 - [qpsk_demod_0, '0', blocks_selector_1, '1']
@@ -1212,6 +1453,8 @@ connections:
 - [rtlsdr_source_0, '0', qtgui_freq_sink_x_1, '0']
 - [rtlsdr_source_0, '0', rational_resampler_xxx_0, '0']
 - [virtual_source_0, '0', blocks_selector_3, '0']
+- [zeromq_sub_source_0, '0', qtgui_freq_sink_x_1, '0']
+- [zeromq_sub_source_0, '0', rational_resampler_xxx_0, '0']
 
 metadata:
   file_format: 1

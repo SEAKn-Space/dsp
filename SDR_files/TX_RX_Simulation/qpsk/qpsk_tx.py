@@ -7,9 +7,8 @@
 # GNU Radio Python Flow Graph
 # Title: qpsk_tx
 # Description: packet transmit
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import blocks
@@ -56,10 +55,9 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "qpsk_tx")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -77,6 +75,7 @@ class qpsk_tx(gr.top_block, Qt.QWidget):
         self.sps = sps = 4
         self.rs_ratio = rs_ratio = 1.040
         self.qpsk = qpsk = digital.constellation_qpsk().base()
+        self.qpsk.set_npwr(1.0)
         self.low_pass_filter_taps = low_pass_filter_taps = firdes.low_pass(1.0, samp_rate, 20000,2000, window.WIN_HAMMING, 6.76)
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.excess_bw = excess_bw = 0.35
@@ -309,9 +308,6 @@ def main(top_block_cls=qpsk_tx, options=None):
     if options is None:
         options = argument_parser().parse_args()
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls(InFile=options.InFile)
