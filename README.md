@@ -29,3 +29,19 @@ To install all needed python library dependencies run `pip install -r requiremen
 To help make the different block diagrams, official [wiki tutorials](https://wiki.gnuradio.org/index.php?title=Tutorials) were used. 
 
 For PSK modulation specifically and packet formatting protocol, a [tutorial on packets](https://wiki.gnuradio.org/index.php?title=File_transfer_using_Packet_and_BPSK) proved helpful, as well as using an [online guide from Nuclearrando](https://nuclearrambo.com/wordpress/transferring-a-text-file-over-the-air-with-limesdr-mini/) to help debug and fix some of the issues with using the hardware SDRs.
+
+### Running SDR Files
+
+After installing GNU Radio, a radio conda python instance should have been installed. This python environment is required to be run to include any GNU Radio blocks or flowgraphs to be run in the terminal. On Windows the default install location is `"C:/Users/user/radioconda/python.exe"`.
+
+### Full Send and Receive Pipeline
+
+Two main python scripts can be run, one on the transmit side and one on the receive side. 
+
+#### Transmit Side
+
+The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "c:/Users/name/dsp/SDR_files/board_interaction/automate_send&receive.py"`. Make sure to change name in the filepath to the correct user.
+
+#### Receive Side
+
+The receive side is intended to be run with a RTL-SDR connected to the computer. The receive side is a GNU Radio flowgraph that makes an output file that will be send to the board. The flowgraph also takes is a message from the board to switch between demodulation BPSK or QPSK.
