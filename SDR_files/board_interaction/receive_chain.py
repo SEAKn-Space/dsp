@@ -34,7 +34,6 @@ from PyQt5 import QtCore
 from qpsk_demod import qpsk_demod  # grc-generated hier_block
 import osmosdr
 import time
-import receive_chain_epy_block_0 as epy_block_0  # embedded python block
 import sip
 
 
@@ -282,7 +281,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setColumnStretch(c, 1)
         self.qtgui_const_sink_x_0_0 = qtgui.const_sink_c(
             1024, #size
-            "BPSK Constellation", #name
+            "Constellation Plot", #name
             1, #number of inputs
             None # parent
         )
@@ -343,7 +342,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0 = epy_block_0.blk(save_file="calla.npy")
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
         self.bpsk_demod_1 = bpsk_demod(
             bpsk=bpsk,
@@ -385,7 +383,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.connect((self.bpsk_demod_1, 1), (self.blocks_selector_1_0, 0))
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.blocks_selector_3, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.epy_block_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.qpsk_demod_0, 0), (self.blocks_selector_1, 1))
         self.connect((self.qpsk_demod_0, 1), (self.blocks_selector_1_0, 1))
