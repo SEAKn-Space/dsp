@@ -129,7 +129,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 712.0]
+    coordinate: [1760, 24.0]
+    rotation: 0
+    state: disabled
+- name: demod_selector
+  id: variable
+  parameters:
+    comment: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1920, 28.0]
     rotation: 0
     state: true
 - name: excess_bw
@@ -224,6 +236,31 @@ blocks:
     coordinate: [1560, 12.0]
     rotation: 0
     state: true
+- name: qtgui_dialgauge_0
+  id: qtgui_dialgauge
+  parameters:
+    affinity: ''
+    alias: ''
+    backgroundColor: white
+    barColor: teal
+    comment: ''
+    fontColor: black
+    gui_hint: 0,2,1,1
+    label: 'Demodulation Scheme Selected:'
+    maximum: '1'
+    minimum: '0'
+    msize: '150'
+    position: '1'
+    showValue: 'True'
+    type: int
+    value: demod_selector
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1976, 288.0]
+    rotation: 0
+    state: enabled
 - name: rrc_taps
   id: variable
   parameters:
@@ -296,6 +333,38 @@ blocks:
     coordinate: [1440, 4.0]
     rotation: 0
     state: true
+- name: variable_qtgui_label_0
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 0,2,1,1
+    label: ''
+    type: bool
+    value: demod_selector
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1760, 372.0]
+    rotation: 0
+    state: disabled
+- name: variable_qtgui_label_1
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: 0,3,1,1
+    label: BPSK=0, QPSK=1
+    type: string
+    value: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1984, 452.0]
+    rotation: 0
+    state: true
 - name: analog_sig_source_x_0_0
   id: analog_sig_source_x
   parameters:
@@ -341,7 +410,7 @@ blocks:
     bus_structure: null
     coordinate: [72, 200.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_file_sink_0
   id: blocks_file_sink
   parameters:
@@ -552,22 +621,25 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       import random\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
-      \ Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
-      \ save_file=\"calla.np\"):  # only default arguments here\n        \"\"\"arguments\
-      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='Embedded Python Block',   # will show\
-      \ up in GRC\n            in_sig=[np.complex64],\n            out_sig=None\n\
-      \            # out_sig=[np.complex64]\n        )\n        # if an attribute\
-      \ with the same name as a parameter is found,\n        # a callback is registered\
-      \ (properties work, too).\n        self.save_file = save_file \n\n    def work(self,\
-      \ input_items, output_items):\n        \"\"\"example: multiply with constant\"\
-      \"\"\n        # output_items[0][:] = input_items[0] * self.example_param\n\n\
-      \        mystery_num = random.randint(1,1_000)\n        if(mystery_num == 1):\n\
-      \            # print(\"Data ,\", input_items[0])\n            # print(type(input_items))\n\
-      \            # print(len(input_items))\n            if (len(input_items[0])\
-      \ >= 128):\n                start = random.randint(0, len(input_items[0])-128)\n\
-      \                data = input_items[0][start:start+128]\n                # output_items[0]\
-      \ = data\n                print(data)\n                # data.tofile(self.save_file)\n\
+      \ Python Block - Randomly grab 128 samples and save to file or pass onto next\
+      \ block.\"\"\"\n\n    def __init__(self, save_file=\"calla.np\", num_points=128):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Embedded Python Block',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            # out_sig=None,\n         \
+      \   out_sig=[np.complex64]\n        )\n        # if an attribute with the same\
+      \ name as a parameter is found,\n        # a callback is registered (properties\
+      \ work, too).\n        self.save_file = save_file \n        self.num_points\
+      \ = num_points\n\n    def work(self, input_items, output_items):\n        \"\
+      \"\"example: multiply with constant\"\"\"\n        output_items[0] = np.array([0],\
+      \ dtype=np.complex64)\n\n\n\n        mystery_num = random.randint(1,1_000)\n\
+      \        if(mystery_num == 1):\n            # print(\"Data ,\", input_items[0])\n\
+      \            # print(type(input_items))\n            # print(len(input_items))\n\
+      \            if (len(input_items[0]) >= self.num_points):\n                start\
+      \ = random.randint(0, len(input_items[0])-self.num_points)\n               \
+      \ data = input_items[0][start:start+self.num_points]\n                output_items[0]\
+      \ = data\n                # print(data)\n                print(\"Collected {}\
+      \ samples\".format(len(data)))\n                # data.tofile(self.save_file)\n\
       \                np.save(self.save_file, data, allow_pickle=True)\n        \
       \        \n        return len(input_items[0])\n        # return (len(output_items[0]))"
     affinity: ''
@@ -575,17 +647,19 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
+    num_points: '128'
     save_file: '"calla.npy"'
   states:
-    _io_cache: ('Embedded Python Block', 'blk', [('save_file', "'calla.np'")], [('0',
-      'complex', 1)], [], 'Embedded Python Block example - a simple multiply const',
-      ['save_file'])
+    _io_cache: ('Embedded Python Block', 'blk', [('save_file', "'calla.np'"), ('num_points',
+      '128')], [('0', 'complex', 1)], [('0', 'complex', 1)], 'Embedded Python Block
+      - Randomly grab 128 samples and save to file or pass onto next block.', ['num_points',
+      'save_file'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 476.0]
+    coordinate: [1312, 436.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0_0
   id: epy_block
   parameters:
@@ -997,6 +1071,28 @@ blocks:
     coordinate: [1312, 184.0]
     rotation: 0
     state: true
+- name: qtgui_ledindicator_0
+  id: qtgui_ledindicator
+  parameters:
+    affinity: ''
+    alias: ''
+    cellalignment: '1'
+    comment: ''
+    gui_hint: 0,2,1,1
+    label: 'Demodulation Scheme Selected: (Red=BPSK, Green=QPSK)'
+    maxSize: '100'
+    offColor: red
+    onColor: green
+    position: '1'
+    state: demod_selector
+    verticalalignment: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1736, 268.0]
+    rotation: 0
+    state: disabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -1470,7 +1566,7 @@ blocks:
     bus_structure: null
     coordinate: [56, 388.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1497,6 +1593,42 @@ blocks:
     coordinate: [64, 912.0]
     rotation: 0
     state: true
+- name: xmlrpc_server_0
+  id: xmlrpc_server
+  parameters:
+    addr: localhost
+    alias: ''
+    comment: ''
+    port: '8080'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1920, 108.0]
+    rotation: 0
+    state: enabled
+- name: zeromq_pub_sink_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:5050
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1536, 408.0]
+    rotation: 0
+    state: enabled
 - name: zeromq_sub_source_0
   id: zeromq_sub_source
   parameters:
@@ -1537,6 +1669,7 @@ connections:
 - [bpsk_demod_1, '0', blocks_selector_1, '0']
 - [bpsk_demod_1, '1', blocks_selector_1_0, '0']
 - [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
+- [epy_block_0, '0', zeromq_pub_sink_0, '0']
 - [epy_block_0_0, msg_out, pdu_pdu_to_tagged_stream_0, pdus]
 - [low_pass_filter_0, '0', epy_block_0, '0']
 - [low_pass_filter_0, '0', qtgui_freq_sink_x_1_0, '0']
