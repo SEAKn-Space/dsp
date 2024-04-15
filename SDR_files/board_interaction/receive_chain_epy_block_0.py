@@ -55,7 +55,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
                     
                     # save to file
-                    np.save(self.save_file, data, allow_pickle=True)
+                    if not self.save_file is None:
+                        np.save(self.save_file, data, allow_pickle=True)
                     return len(data)
                 elif self._debug:
                     print("Input length is less than num_points")
@@ -76,7 +77,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
                     
                     # save to file
-                    np.save(self.save_file, data, allow_pickle=True)
+                    if not self.save_file is None:
+                        np.save(self.save_file, data, allow_pickle=True)
                     return len(data)
                 elif self._debug:
                     print("Input length is less than num_points")

@@ -13,10 +13,11 @@ from gnuradio import gr
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block - Randomly grab num_points samples and save to file or pass onto next block.
     Args:
-        save_file (str): File to save samples to.
+        save_file (str): File to save samples to. Set to None to not save to file.
         num_points (int): Number of samples to grab. Ex: 128. Must be less than or equal to the number of samples in the input (4096).
         grab_random (bool): If True, grab samples randomly. If False, grab samples sequentially at given rate.
-        rate (int): Rate at which to grab samples. Higher rate means longer time between grabbing samples."""
+        rate (int): Rate at which to grab samples. Higher rate means longer time between grabbing samples.
+        debug (bool): If True, print debug messages."""
 
     def __init__(self, save_file="calla.np", num_points=128, grab_random=False, rate=10_000,debug=False):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
@@ -30,10 +31,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         # a callback is registered (properties work, too).
         self.save_file = save_file 
         self.num_points = num_points
-        self.iter_counts = 0
         self.grab_random = grab_random
         self.rate = rate
         self._debug = debug
+
+        self.iter_counts = 0
 
     def work(self, input_items, output_items):
         """Grab num_points samples and save to file or pass onto next block."""
@@ -55,7 +57,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
                     
                     # save to file
-                    np.save(self.save_file, data, allow_pickle=True)
+                    if not self.save_file is None:
+                        np.save(self.save_file, data, allow_pickle=True)
                     return len(data)
                 elif self._debug:
                     print("Input length is less than num_points")
@@ -76,7 +79,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
                     
                     # save to file
-                    np.save(self.save_file, data, allow_pickle=True)
+                    if not self.save_file is None:
+                        np.save(self.save_file, data, allow_pickle=True)
                     return len(data)
                 elif self._debug:
                     print("Input length is less than num_points")

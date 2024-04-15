@@ -650,34 +650,35 @@ blocks:
       \n                    if self._debug:\n                        print(\"Collected\
       \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
       \                    \n                    # save to file\n                \
-      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
-      \ len(data)\n                elif self._debug:\n                    print(\"\
-      Input length is less than num_points\")\n            \n        else:\n     \
-      \       self.iter_counts += 1\n            if (self.iter_counts >= self.rate):\n\
-      \n                self.iter_counts = 0\n                if self._debug:\n  \
-      \                  print(\"Input length: \",len(input_items[0]))\n\n       \
-      \         if (int(len(input_items[0])) >= int(self.num_points)):\n         \
-      \           start = random.randint(0, len(input_items[0])-self.num_points)\n\
+      \    if not self.save_file is None:\n                        np.save(self.save_file,\
+      \ data, allow_pickle=True)\n                    return len(data)\n         \
+      \       elif self._debug:\n                    print(\"Input length is less\
+      \ than num_points\")\n            \n        else:\n            self.iter_counts\
+      \ += 1\n            if (self.iter_counts >= self.rate):\n\n                self.iter_counts\
+      \ = 0\n                if self._debug:\n                    print(\"Input length:\
+      \ \",len(input_items[0]))\n\n                if (int(len(input_items[0])) >=\
+      \ int(self.num_points)):\n                    start = random.randint(0, len(input_items[0])-self.num_points)\n\
       \                    data = input_items[0][start:start+self.num_points]\n  \
       \                  output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
       \                    if self._debug:\n                        print(\"Collected\
       \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
       \                    \n                    # save to file\n                \
-      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
-      \ len(data)\n                elif self._debug:\n                    print(\"\
-      Input length is less than num_points\")\n\n        output_items[0][:] = 0\n\
-      \        return self.num_points\n        # output_items[0][:self.num_points]\
-      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))"
+      \    if not self.save_file is None:\n                        np.save(self.save_file,\
+      \ data, allow_pickle=True)\n                    return len(data)\n         \
+      \       elif self._debug:\n                    print(\"Input length is less\
+      \ than num_points\")\n\n        output_items[0][:] = 0\n        return self.num_points\n\
+      \        # output_items[0][:self.num_points] = input_items[0][:self.num_points]\n\
+      \        # return (len(output_items[0]))"
     affinity: ''
     alias: ''
     comment: ''
     debug: 'True'
-    grab_random: 'False'
+    grab_random: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_points: '2048'
     rate: '10_000'
-    save_file: '"calla.npy"'
+    save_file: None
   states:
     _io_cache: '(''Get Random Sample'', ''blk'', [(''save_file'', "''calla.np''"),
       (''num_points'', ''128''), (''grab_random'', ''False''), (''rate'', ''10000''),
