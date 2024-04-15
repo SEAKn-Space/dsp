@@ -1169,7 +1169,7 @@ blocks:
     dev_args: ''
     samp_rate: 20*samp_rate
     type: fc32
-    vga: '15'
+    vga: '40'
   states:
     bus_sink: false
     bus_source: false

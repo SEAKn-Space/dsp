@@ -621,43 +621,79 @@ blocks:
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       import random\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
-      \ Python Block - Randomly grab 128 samples and save to file or pass onto next\
-      \ block.\"\"\"\n\n    def __init__(self, save_file=\"calla.np\", num_points=128):\
+      \ Python Block - Randomly grab num_points samples and save to file or pass onto\
+      \ next block.\n    Args:\n        save_file (str): File to save samples to.\n\
+      \        num_points (int): Number of samples to grab. Ex: 128. Must be less\
+      \ than or equal to the number of samples in the input (4096).\n        grab_random\
+      \ (bool): If True, grab samples randomly. If False, grab samples sequentially\
+      \ at given rate.\n        rate (int): Rate at which to grab samples. Higher\
+      \ rate means longer time between grabbing samples.\"\"\"\n\n    def __init__(self,\
+      \ save_file=\"calla.np\", num_points=128, grab_random=False, rate=10_000,debug=False):\
       \  # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='Embedded Python Block',   # will show up in GRC\n\
-      \            in_sig=[np.complex64],\n            # out_sig=None,\n         \
-      \   out_sig=[np.complex64]\n        )\n        # if an attribute with the same\
-      \ name as a parameter is found,\n        # a callback is registered (properties\
-      \ work, too).\n        self.save_file = save_file \n        self.num_points\
-      \ = num_points\n\n    def work(self, input_items, output_items):\n        \"\
-      \"\"example: multiply with constant\"\"\"\n        output_items[0] = np.array([0],\
-      \ dtype=np.complex64)\n\n\n\n        mystery_num = random.randint(1,1_000)\n\
-      \        if(mystery_num == 1):\n            # print(\"Data ,\", input_items[0])\n\
-      \            # print(type(input_items))\n            # print(len(input_items))\n\
-      \            if (len(input_items[0]) >= self.num_points):\n                start\
-      \ = random.randint(0, len(input_items[0])-self.num_points)\n               \
-      \ data = input_items[0][start:start+self.num_points]\n                output_items[0]\
-      \ = data\n                # print(data)\n                print(\"Collected {}\
-      \ samples\".format(len(data)))\n                # data.tofile(self.save_file)\n\
-      \                np.save(self.save_file, data, allow_pickle=True)\n        \
-      \        \n        return len(input_items[0])\n        # return (len(output_items[0]))"
+      \   self,\n            name='Get Random Sample',   # will show up in GRC\n \
+      \           in_sig=[np.complex64],\n            out_sig=[np.complex64]\n   \
+      \     )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.save_file\
+      \ = save_file \n        self.num_points = num_points\n        self.iter_counts\
+      \ = 0\n        self.grab_random = grab_random\n        self.rate = rate\n  \
+      \      self._debug = debug\n\n    def work(self, input_items, output_items):\n\
+      \        \"\"\"Grab num_points samples and save to file or pass onto next block.\"\
+      \"\"\n\n        if (input_items is None or len(input_items[0]) is None or input_items[0]\
+      \ is None):\n            print(\"Input type is None\")\n            return 0\n\
+      \n        if self.grab_random:\n            mystery_num = random.randint(1,self.rate)\n\
+      \            if(mystery_num == 1):\n                self.iter_counts = 0\n \
+      \               if (len(input_items[0]) >= self.num_points):\n             \
+      \       start = random.randint(0, len(input_items[0])-self.num_points)\n   \
+      \                 data = input_items[0][start:start+self.num_points]\n     \
+      \               output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
+      \n                    if self._debug:\n                        print(\"Collected\
+      \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
+      \                    \n                    # save to file\n                \
+      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
+      \ len(data)\n                elif self._debug:\n                    print(\"\
+      Input length is less than num_points\")\n            \n        else:\n     \
+      \       self.iter_counts += 1\n            if (self.iter_counts >= self.rate):\n\
+      \n                self.iter_counts = 0\n                if self._debug:\n  \
+      \                  print(\"Input length: \",len(input_items[0]))\n\n       \
+      \         if (int(len(input_items[0])) >= int(self.num_points)):\n         \
+      \           start = random.randint(0, len(input_items[0])-self.num_points)\n\
+      \                    data = input_items[0][start:start+self.num_points]\n  \
+      \                  output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
+      \                    if self._debug:\n                        print(\"Collected\
+      \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
+      \                    \n                    # save to file\n                \
+      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
+      \ len(data)\n                elif self._debug:\n                    print(\"\
+      Input length is less than num_points\")\n\n        output_items[0][:] = 0\n\
+      \        return self.num_points\n        # output_items[0][:self.num_points]\
+      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))"
     affinity: ''
     alias: ''
     comment: ''
+    debug: 'True'
+    grab_random: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_points: '128'
+    num_points: '2048'
+    rate: '10_000'
     save_file: '"calla.npy"'
   states:
-    _io_cache: ('Embedded Python Block', 'blk', [('save_file', "'calla.np'"), ('num_points',
-      '128')], [('0', 'complex', 1)], [('0', 'complex', 1)], 'Embedded Python Block
-      - Randomly grab 128 samples and save to file or pass onto next block.', ['num_points',
-      'save_file'])
+    _io_cache: '(''Get Random Sample'', ''blk'', [(''save_file'', "''calla.np''"),
+      (''num_points'', ''128''), (''grab_random'', ''False''), (''rate'', ''10000''),
+      (''debug'', ''False'')], [(''0'', ''complex'', 1)], [(''0'', ''complex'', 1)],
+      ''Embedded Python Block - Randomly grab num_points samples and save to file
+      or pass onto next block.\n    Args:\n        save_file (str): File to save samples
+      to.\n        num_points (int): Number of samples to grab. Ex: 128. Must be less
+      than or equal to the number of samples in the input (4096).\n        grab_random
+      (bool): If True, grab samples randomly. If False, grab samples sequentially
+      at given rate.\n        rate (int): Rate at which to grab samples. Higher rate
+      means longer time between grabbing samples.'', [''grab_random'', ''num_points'',
+      ''rate'', ''save_file''])'
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 436.0]
+    coordinate: [1288, 436.0]
     rotation: 0
     state: enabled
 - name: epy_block_0_0
@@ -1093,6 +1129,103 @@ blocks:
     coordinate: [1736, 268.0]
     rotation: 0
     state: disabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '128'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1552, 572.0]
+    rotation: 0
+    state: enabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -1669,6 +1802,7 @@ connections:
 - [bpsk_demod_1, '0', blocks_selector_1, '0']
 - [bpsk_demod_1, '1', blocks_selector_1_0, '0']
 - [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
+- [epy_block_0, '0', qtgui_time_sink_x_0, '0']
 - [epy_block_0, '0', zeromq_pub_sink_0, '0']
 - [epy_block_0_0, msg_out, pdu_pdu_to_tagged_stream_0, pdus]
 - [low_pass_filter_0, '0', epy_block_0, '0']

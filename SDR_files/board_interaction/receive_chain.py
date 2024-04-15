@@ -188,6 +188,57 @@ class receive_chain(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
+            128, #size
+            samp_rate, #samp_rate
+            "", #name
+            1, #number of inputs
+            None # parent
+        )
+        self.qtgui_time_sink_x_0.set_update_time(0.10)
+        self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
+
+        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
+
+        self.qtgui_time_sink_x_0.enable_tags(True)
+        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0.enable_grid(False)
+        self.qtgui_time_sink_x_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0.enable_control_panel(False)
+        self.qtgui_time_sink_x_0.enable_stem_plot(False)
+
+
+        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
+            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ['blue', 'red', 'green', 'black', 'cyan',
+            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+        styles = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        markers = [-1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1]
+
+
+        for i in range(2):
+            if len(labels[i]) == 0:
+                if (i % 2 == 0):
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
+                else:
+                    self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+            else:
+                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.qtgui_freq_sink_x_1_0 = qtgui.freq_sink_c(
             16384, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -357,7 +408,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0 = epy_block_0.blk(save_file="calla.npy", num_points=128)
+        self.epy_block_0 = epy_block_0.blk(save_file="calla.npy", num_points=2048, grab_random=False, rate=10_000, debug=True)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
         self.bpsk_demod_1 = bpsk_demod(
             access_key='11100001010110101110100010010011',
@@ -402,6 +453,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.connect((self.bpsk_demod_1, 0), (self.blocks_selector_1, 0))
         self.connect((self.bpsk_demod_1, 1), (self.blocks_selector_1_0, 0))
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.low_pass_filter_0, 0))
+        self.connect((self.epy_block_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.epy_block_0, 0), (self.zeromq_pub_sink_0, 0))
         self.connect((self.low_pass_filter_0, 0), (self.blocks_selector_3, 0))
         self.connect((self.low_pass_filter_0, 0), (self.epy_block_0, 0))
@@ -437,6 +489,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.bpsk_demod_1.set_samp_rate(self.samp_rate)
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 6e3, 1.6E3, window.WIN_HAMMING, 6.76))
         self.qtgui_freq_sink_x_1_0.set_frequency_range(0, self.samp_rate)
+        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
 
     def get_nfilts(self):

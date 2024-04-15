@@ -70,7 +70,7 @@ class qpsk_tx_automated(gr.top_block):
         self.soapy_hackrf_sink_0.set_bandwidth(0, 0)
         self.soapy_hackrf_sink_0.set_frequency(0, transmit_freq)
         self.soapy_hackrf_sink_0.set_gain(0, 'AMP', False)
-        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(15, 0.0), 47.0))
+        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(40, 0.0), 47.0))
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=20,
                 decimation=1,
