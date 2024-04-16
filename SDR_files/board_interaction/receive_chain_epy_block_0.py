@@ -11,37 +11,77 @@ import random
 from gnuradio import gr
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
-    """Embedded Python Block example - a simple multiply const"""
+    """Embedded Python Block - Randomly grab num_points samples and save to file or pass onto next block.
+    Args:
+        save_file (str): File to save samples to.
+        num_points (int): Number of samples to grab. Ex: 128. Must be less than or equal to the number of samples in the input (4096).
+        grab_random (bool): If True, grab samples randomly. If False, grab samples sequentially at given rate.
+        rate (int): Rate at which to grab samples. Higher rate means longer time between grabbing samples."""
 
-    def __init__(self, save_file="calla.np"):  # only default arguments here
+    def __init__(self, save_file="calla.np", num_points=128, grab_random=False, rate=10_000,debug=False):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='Embedded Python Block',   # will show up in GRC
+            name='Get Random Sample',   # will show up in GRC
             in_sig=[np.complex64],
-            out_sig=None
-            # out_sig=[np.complex64]
+            out_sig=[np.complex64]
         )
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
         self.save_file = save_file 
+        self.num_points = num_points
+        self.iter_counts = 0
+        self.grab_random = grab_random
+        self.rate = rate
+        self._debug = debug
 
     def work(self, input_items, output_items):
-        """example: multiply with constant"""
-        # output_items[0][:] = input_items[0] * self.example_param
+        """Grab num_points samples and save to file or pass onto next block."""
 
-        mystery_num = random.randint(1,1_000)
-        if(mystery_num == 1):
-            # print("Data ,", input_items[0])
-            # print(type(input_items))
-            # print(len(input_items))
-            if (len(input_items[0]) >= 128):
-                start = random.randint(0, len(input_items[0])-128)
-                data = input_items[0][start:start+128]
-                # output_items[0] = data
-                print(data)
-                # data.tofile(self.save_file)
-                np.save(self.save_file, data, allow_pickle=True)
-                
-        return len(input_items[0])
+        if (input_items is None or len(input_items[0]) is None or input_items[0] is None):
+            print("Input type is None")
+            return 0
+
+        if self.grab_random:
+            mystery_num = random.randint(1,self.rate)
+            if(mystery_num == 1):
+                self.iter_counts = 0
+                if (len(input_items[0]) >= self.num_points):
+                    start = random.randint(0, len(input_items[0])-self.num_points)
+                    data = input_items[0][start:start+self.num_points]
+                    output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+
+                    if self._debug:
+                        print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
+                    
+                    # save to file
+                    np.save(self.save_file, data, allow_pickle=True)
+                    return len(data)
+                elif self._debug:
+                    print("Input length is less than num_points")
+            
+        else:
+            self.iter_counts += 1
+            if (self.iter_counts >= self.rate):
+
+                self.iter_counts = 0
+                if self._debug:
+                    print("Input length: ",len(input_items[0]))
+
+                if (int(len(input_items[0])) >= int(self.num_points)):
+                    start = random.randint(0, len(input_items[0])-self.num_points)
+                    data = input_items[0][start:start+self.num_points]
+                    output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+                    if self._debug:
+                        print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
+                    
+                    # save to file
+                    np.save(self.save_file, data, allow_pickle=True)
+                    return len(data)
+                elif self._debug:
+                    print("Input length is less than num_points")
+
+        output_items[0][:] = 0
+        return self.num_points
+        # output_items[0][:self.num_points] = input_items[0][:self.num_points]
         # return (len(output_items[0]))

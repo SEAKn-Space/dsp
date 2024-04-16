@@ -399,7 +399,7 @@ blocks:
       )\n                print(\"Try Decreasing Input File Size or Increasing Minoutput\
       \ Buffer\")\n            return 0\n\n        if (self.state == 0):\n       \
       \     if (self._debug):\n                print(\"State 0\")\n            # idle\n\
-      \            return (0)\n\n        elif (self.state == 1):\n            # send\
+      \            return -1\n\n        elif (self.state == 1):\n            # send\
       \ preamble\n            if (self._debug):\n                print (\"State =\
       \ 1\", self.pre_count)\n            key1 = pmt.intern(\"packet_len\")\n    \
       \        val1 = pmt.from_long(self.c_len)\n            self.add_item_tag(0,\
@@ -465,7 +465,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '64'
+    initial_packet_fill: '100'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -1169,7 +1169,7 @@ blocks:
     dev_args: ''
     samp_rate: 20*samp_rate
     type: fc32
-    vga: '15'
+    vga: '40'
   states:
     bus_sink: false
     bus_source: false

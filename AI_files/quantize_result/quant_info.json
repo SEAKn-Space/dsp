@@ -1,0 +1,33 @@
+{
+  "param":
+  {
+    "CNN2D::conv1.weight":[[8,8]],
+    "CNN2D::conv1.bias":[[8,8]],
+    "CNN2D::conv2.weight":[[8,8]],
+    "CNN2D::conv2.bias":[[8,10]],
+    "CNN2D::fc1.weight":[[8,8]],
+    "CNN2D::fc1.bias":[[8,9]],
+    "CNN2D::fc2.weight":[[8,8]],
+    "CNN2D::fc2.bias":[[8,10]]
+  },
+  "output":
+  {
+    "CNN2D::nndct_input_0":[[8,6]],
+    "CNN2D::nndct_resize_2":[[8,7]],
+    "CNN2D::nndct_relu_4":[[8,6]],
+    "CNN2D::nndct_adaptive_avg_pool2d_5":[[8,6]],
+    "CNN2D::nndct_relu_7":[[8,4]],
+    "CNN2D::nndct_adaptive_avg_pool2d_8":[[8,5]],
+    "CNN2D::nndct_adaptive_avg_pool2d_9":[[8,5]],
+    "CNN2D::nndct_relu_13":[[8,6]],
+    "CNN2D::nndct_dense_14":[[8,5]]
+  },
+  "input":
+  {
+
+  },
+  "fast_finetuned":false,
+  "bias_corrected":true,
+  "version":"3.5.0+60df3f1+torch1.13.1",
+  "graph_md5":"3eefeffc4228b54b988d0c02a72d1f41"
+}

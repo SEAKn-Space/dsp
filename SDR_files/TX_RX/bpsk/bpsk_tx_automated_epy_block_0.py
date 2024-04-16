@@ -67,7 +67,7 @@ class blk(gr.sync_block):
             if (self._debug):
                 print("State 0")
             # idle
-            return (0)
+            return -1
 
         elif (self.state == 1):
             # send preamble

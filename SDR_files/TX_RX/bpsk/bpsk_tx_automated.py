@@ -70,13 +70,13 @@ class bpsk_tx_automated(gr.top_block):
         self.soapy_hackrf_sink_0.set_bandwidth(0, 0)
         self.soapy_hackrf_sink_0.set_frequency(0, transmit_freq)
         self.soapy_hackrf_sink_0.set_gain(0, 'AMP', False)
-        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(15, 0.0), 47.0))
+        self.soapy_hackrf_sink_0.set_gain(0, 'VGA', min(max(40, 0.0), 47.0))
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=20,
                 decimation=1,
                 taps=[],
                 fractional_bw=0)
-        self.epy_block_0 = epy_block_0.blk(FileName="./SDR_files/test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=64)
+        self.epy_block_0 = epy_block_0.blk(FileName="./SDR_files/test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=100)
         self.digital_protocol_formatter_bb_0 = digital.protocol_formatter_bb(hdr_format, "packet_len")
         self.digital_crc32_bb_0 = digital.crc32_bb(False, "packet_len", True)
         self.digital_constellation_modulator_0 = digital.generic_mod(

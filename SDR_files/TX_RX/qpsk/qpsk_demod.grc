@@ -1,0 +1,378 @@
+options:
+  parameters:
+    author: ''
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb_qt_gui
+    hier_block_src_path: '.:'
+    id: qpsk_demod
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: qpsk demod
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: analog_feedforward_agc_cc_0_0
+  id: analog_feedforward_agc_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_samples: '1024'
+    reference: '1.55'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [128, 356.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repack_bits_bb_1_0_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: MSB
+    endianness: gr.GR_MSB_FIRST
+    k: '1'
+    l: '8'
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [984, 484.0]
+    rotation: 0
+    state: true
+- name: blocks_unpack_k_bits_bb_0_0
+  id: blocks_unpack_k_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    k: '2'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 544.0]
+    rotation: 0
+    state: true
+- name: digital_constellation_decoder_cb_0_0
+  id: digital_constellation_decoder_cb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: qpsk
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 176.0]
+    rotation: 0
+    state: true
+- name: digital_correlate_access_code_xx_ts_0_0
+  id: digital_correlate_access_code_xx_ts
+  parameters:
+    access_code: '"11100001010110101110100010010011"'
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    tagname: packet_len
+    threshold: thresh
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 476.0]
+    rotation: 0
+    state: true
+- name: digital_costas_loop_cc_0_0
+  id: digital_costas_loop_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    order: '4'
+    use_snr: 'False'
+    w: phase_bw
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [848, 184.0]
+    rotation: 0
+    state: enabled
+- name: digital_crc32_bb_0_0_0
+  id: digital_crc32_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    check: 'True'
+    comment: ''
+    lengthtagname: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packed: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1192, 476.0]
+    rotation: 0
+    state: true
+- name: digital_diff_decoder_bb_0_0
+  id: digital_diff_decoder_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    coding: digital.DIFF_DIFFERENTIAL
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    modulus: '4'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1360, 164.0]
+    rotation: 0
+    state: enabled
+- name: digital_map_bb_0_0_0
+  id: digital_map_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    map: '[0,1,2,3]'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 544.0]
+    rotation: 0
+    state: true
+- name: digital_symbol_sync_xx_0_0
+  id: digital_symbol_sync_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    constellation: digital.constellation_bpsk().base()
+    damping: '1.0'
+    loop_bw: phase_bw
+    max_dev: '1.5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nfilters: '128'
+    osps: '1'
+    pfb_mf_taps: ''
+    resamp_type: digital.IR_PFB_NO_MF
+    sps: sps
+    ted_gain: '1.0'
+    ted_type: digital.TED_SIGNUM_TIMES_SLOPE_ML
+    type: cc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 180.0]
+    rotation: 0
+    state: true
+- name: packet_len
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 12.0]
+    rotation: 0
+    state: true
+- name: pad_sink_1
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: out
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1464, 496.0]
+    rotation: 0
+    state: true
+- name: pad_sink_1_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: constellation
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1104, 248.0]
+    rotation: 0
+    state: true
+- name: pad_source_1
+  id: pad_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: in
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 256.0]
+    rotation: 0
+    state: true
+- name: phase_bw
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 12.0]
+    rotation: 0
+    state: true
+- name: qpsk
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 12.0]
+    rotation: 0
+    state: true
+- name: sps
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 12.0]
+    rotation: 0
+    state: true
+- name: thresh
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: ''
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 12.0]
+    rotation: 0
+    state: true
+
+connections:
+- [analog_feedforward_agc_cc_0_0, '0', digital_symbol_sync_xx_0_0, '0']
+- [blocks_repack_bits_bb_1_0_0, '0', digital_crc32_bb_0_0_0, '0']
+- [blocks_unpack_k_bits_bb_0_0, '0', digital_map_bb_0_0_0, '0']
+- [digital_constellation_decoder_cb_0_0, '0', digital_diff_decoder_bb_0_0, '0']
+- [digital_correlate_access_code_xx_ts_0_0, '0', blocks_repack_bits_bb_1_0_0, '0']
+- [digital_costas_loop_cc_0_0, '0', digital_constellation_decoder_cb_0_0, '0']
+- [digital_costas_loop_cc_0_0, '0', pad_sink_1_0, '0']
+- [digital_crc32_bb_0_0_0, '0', pad_sink_1, '0']
+- [digital_diff_decoder_bb_0_0, '0', blocks_unpack_k_bits_bb_0_0, '0']
+- [digital_map_bb_0_0_0, '0', digital_correlate_access_code_xx_ts_0_0, '0']
+- [digital_symbol_sync_xx_0_0, '0', digital_costas_loop_cc_0_0, '0']
+- [pad_source_1, '0', analog_feedforward_agc_cc_0_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.8.0

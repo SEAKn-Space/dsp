@@ -560,7 +560,7 @@ class top_block_sim(gr.top_block, Qt.QWidget):
 
         self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_const_sink_x_0_win)
-        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=64)
+        self.orginal_EPB = orginal_EPB.blk(FileName="../../test_io/BPSK.png", Pkt_len=packet_len, initial_packet_fill=128)
         self.low_pass_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.low_pass(
