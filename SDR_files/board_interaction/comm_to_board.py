@@ -9,6 +9,7 @@ be the parameters. All of them are required to have default values!
 import numpy as np
 import random
 from gnuradio import gr
+import torch
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block - Randomly grab num_points samples and save to file or pass onto next block.
@@ -78,6 +79,22 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     if self._debug:
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
                     
+                    formated_data = np.vstack((data.real, data.imag))
+                    formated_data_torch = torch.from_numpy(formated_data)
+                    formated_data_tensor = torch.tensor(formated_data_torch, dtype=torch.float32)
+                    min_val = torch.tensor(formated_data_tensor.min(axis=1).values, dtype=torch.float32)
+                    max_val = torch.tensor(formated_data_tensor.max(axis=1).values, dtype=torch.float32)
+
+                    #normalize
+                    epsilon = 1e-10
+                    normalized_data = 2* (formated_data_tensor - min_val.unsqueeze(1)) / (max_val.unsqueeze(1) - min_val.unsqueeze(1) + epsilon) - 1
+                    normalized_data_np = normalized_data.numpy()
+                    
+                    if self._debug:
+                        print(normalized_data_np.shape)
+                        print(formated_data.shape)
+                        print(formated_data[0:10])
+
                     # save to file
                     if not self.save_file is None:
                         np.save(self.save_file, data, allow_pickle=True)

@@ -619,15 +619,16 @@ blocks:
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      import random\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):  # other\
-      \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
-      \ Python Block - Randomly grab num_points samples and save to file or pass onto\
-      \ next block.\n    Args:\n        save_file (str): File to save samples to.\n\
-      \        num_points (int): Number of samples to grab. Ex: 128. Must be less\
-      \ than or equal to the number of samples in the input (4096).\n        grab_random\
-      \ (bool): If True, grab samples randomly. If False, grab samples sequentially\
-      \ at given rate.\n        rate (int): Rate at which to grab samples. Higher\
-      \ rate means longer time between grabbing samples.\"\"\"\n\n    def __init__(self,\
+      import random\nfrom gnuradio import gr\nimport torch\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block - Randomly grab num_points samples and save to file\
+      \ or pass onto next block.\n    Args:\n        save_file (str): File to save\
+      \ samples to. Set to None to not save to file.\n        num_points (int): Number\
+      \ of samples to grab. Ex: 128. Must be less than or equal to the number of samples\
+      \ in the input (4096).\n        grab_random (bool): If True, grab samples randomly.\
+      \ If False, grab samples sequentially at given rate.\n        rate (int): Rate\
+      \ at which to grab samples. Higher rate means longer time between grabbing samples.\n\
+      \        debug (bool): If True, print debug messages.\"\"\"\n\n    def __init__(self,\
       \ save_file=\"calla.np\", num_points=128, grab_random=False, rate=10_000,debug=False):\
       \  # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
@@ -635,9 +636,9 @@ blocks:
       \           in_sig=[np.complex64],\n            out_sig=[np.complex64]\n   \
       \     )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.save_file\
-      \ = save_file \n        self.num_points = num_points\n        self.iter_counts\
-      \ = 0\n        self.grab_random = grab_random\n        self.rate = rate\n  \
-      \      self._debug = debug\n\n    def work(self, input_items, output_items):\n\
+      \ = save_file \n        self.num_points = num_points\n        self.grab_random\
+      \ = grab_random\n        self.rate = rate\n        self._debug = debug\n\n \
+      \       self.iter_counts = 0\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"Grab num_points samples and save to file or pass onto next block.\"\
       \"\"\n\n        if (input_items is None or len(input_items[0]) is None or input_items[0]\
       \ is None):\n            print(\"Input type is None\")\n            return 0\n\
@@ -662,21 +663,32 @@ blocks:
       \                  output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
       \                    if self._debug:\n                        print(\"Collected\
       \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
-      \                    \n                    # save to file\n                \
-      \    if not self.save_file is None:\n                        np.save(self.save_file,\
-      \ data, allow_pickle=True)\n                    return len(data)\n         \
-      \       elif self._debug:\n                    print(\"Input length is less\
-      \ than num_points\")\n\n        output_items[0][:] = 0\n        return self.num_points\n\
-      \        # output_items[0][:self.num_points] = input_items[0][:self.num_points]\n\
-      \        # return (len(output_items[0]))"
+      \                    \n                    formated_data = np.vstack((data.real,\
+      \ data.imag))\n                    formated_data_torch = torch.from_numpy(formated_data)\n\
+      \                    formated_data_tensor = torch.tensor(formated_data_torch,\
+      \ dtype=torch.float32)\n                    min_val = torch.tensor(formated_data_tensor.min(axis=1).values,\
+      \ dtype=torch.float32)\n                    max_val = torch.tensor(formated_data_tensor.max(axis=1).values,\
+      \ dtype=torch.float32)\n\n                    #normalize\n                 \
+      \   epsilon = 1e-10\n                    normalized_data = 2* (formated_data_tensor\
+      \ - min_val.unsqueeze(1)) / (max_val.unsqueeze(1) - min_val.unsqueeze(1) + epsilon)\
+      \ - 1\n                    normalized_data_np = normalized_data.numpy()\n  \
+      \                  \n                    if self._debug:\n                 \
+      \       print(normalized_data_np.shape)\n                        print(formated_data.shape)\n\
+      \                        print(formated_data[0:10])\n\n                    #\
+      \ save to file\n                    if not self.save_file is None:\n       \
+      \                 np.save(self.save_file, data, allow_pickle=True)\n       \
+      \             return len(data)\n                elif self._debug:\n        \
+      \            print(\"Input length is less than num_points\")\n\n        output_items[0][:]\
+      \ = 0\n        return self.num_points\n        # output_items[0][:self.num_points]\
+      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))"
     affinity: ''
     alias: ''
     comment: ''
     debug: 'True'
-    grab_random: 'True'
+    grab_random: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_points: '2048'
+    num_points: '768'
     rate: '10_000'
     save_file: None
   states:
@@ -685,11 +697,12 @@ blocks:
       (''debug'', ''False'')], [(''0'', ''complex'', 1)], [(''0'', ''complex'', 1)],
       ''Embedded Python Block - Randomly grab num_points samples and save to file
       or pass onto next block.\n    Args:\n        save_file (str): File to save samples
-      to.\n        num_points (int): Number of samples to grab. Ex: 128. Must be less
-      than or equal to the number of samples in the input (4096).\n        grab_random
-      (bool): If True, grab samples randomly. If False, grab samples sequentially
-      at given rate.\n        rate (int): Rate at which to grab samples. Higher rate
-      means longer time between grabbing samples.'', [''grab_random'', ''num_points'',
+      to. Set to None to not save to file.\n        num_points (int): Number of samples
+      to grab. Ex: 128. Must be less than or equal to the number of samples in the
+      input (4096).\n        grab_random (bool): If True, grab samples randomly. If
+      False, grab samples sequentially at given rate.\n        rate (int): Rate at
+      which to grab samples. Higher rate means longer time between grabbing samples.\n        debug
+      (bool): If True, print debug messages.'', [''grab_random'', ''num_points'',
       ''rate'', ''save_file''])'
     bus_sink: false
     bus_source: false

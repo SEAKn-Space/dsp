@@ -408,7 +408,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0 = epy_block_0.blk(save_file=None, num_points=2048, grab_random=True, rate=10_000, debug=True)
+        self.epy_block_0 = epy_block_0.blk(save_file=None, num_points=768, grab_random=False, rate=10_000, debug=True)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
         self.bpsk_demod_1 = bpsk_demod(
             access_key='11100001010110101110100010010011',
