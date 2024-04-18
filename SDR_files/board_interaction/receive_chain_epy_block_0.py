@@ -90,10 +90,22 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     normalized_data = 2* (formated_data_tensor - min_val.unsqueeze(1)) / (max_val.unsqueeze(1) - min_val.unsqueeze(1) + epsilon) - 1
                     normalized_data_np = normalized_data.numpy()
                     
+                    # if self._debug:
+                    #     print(normalized_data_np.shape)
+                    #     print(normalized_data.shape)
+                    #     print(normalized_data_np[0:10])
+
+                    normalized_real = normalized_data_np[0]
+                    normalized_imag = normalized_data_np[1]
+
+                    n_data = np.zeros(self.num_points, dtype=np.complex64)
+                    for i in range(self.num_points):
+                        n_data[i] = complex(normalized_real[i], normalized_imag[i])
+                    
                     if self._debug:
-                        print(normalized_data_np.shape)
-                        print(formated_data.shape)
-                        print(formated_data[0:10])
+                        print(n_data)
+
+                    output_items[0][:len(n_data)] = n_data[:]
 
                     # save to file
                     if not self.save_file is None:

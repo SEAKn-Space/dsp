@@ -672,15 +672,22 @@ blocks:
       \   epsilon = 1e-10\n                    normalized_data = 2* (formated_data_tensor\
       \ - min_val.unsqueeze(1)) / (max_val.unsqueeze(1) - min_val.unsqueeze(1) + epsilon)\
       \ - 1\n                    normalized_data_np = normalized_data.numpy()\n  \
-      \                  \n                    if self._debug:\n                 \
-      \       print(normalized_data_np.shape)\n                        print(formated_data.shape)\n\
-      \                        print(formated_data[0:10])\n\n                    #\
-      \ save to file\n                    if not self.save_file is None:\n       \
-      \                 np.save(self.save_file, data, allow_pickle=True)\n       \
-      \             return len(data)\n                elif self._debug:\n        \
-      \            print(\"Input length is less than num_points\")\n\n        output_items[0][:]\
-      \ = 0\n        return self.num_points\n        # output_items[0][:self.num_points]\
-      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))"
+      \                  \n                    # if self._debug:\n               \
+      \     #     print(normalized_data_np.shape)\n                    #     print(normalized_data.shape)\n\
+      \                    #     print(normalized_data_np[0:10])\n\n             \
+      \       normalized_real = normalized_data_np[0]\n                    normalized_imag\
+      \ = normalized_data_np[1]\n\n                    n_data = np.zeros(self.num_points,\
+      \ dtype=np.complex64)\n                    for i in range(self.num_points):\n\
+      \                        n_data[i] = complex(normalized_real[i], normalized_imag[i])\n\
+      \                    \n                    if self._debug:\n               \
+      \         print(n_data)\n\n                    output_items[0][:len(n_data)]\
+      \ = n_data[:]\n\n                    # save to file\n                    if\
+      \ not self.save_file is None:\n                        np.save(self.save_file,\
+      \ data, allow_pickle=True)\n                    return len(data)\n         \
+      \       elif self._debug:\n                    print(\"Input length is less\
+      \ than num_points\")\n\n        output_items[0][:] = 0\n        return self.num_points\n\
+      \        # output_items[0][:self.num_points] = input_items[0][:self.num_points]\n\
+      \        # return (len(output_items[0]))"
     affinity: ''
     alias: ''
     comment: ''
