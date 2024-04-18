@@ -1,4 +1,3 @@
-testing.py
 RML2016.10a_dict.pkl
 SDR_files/test_io/data_dump_centered
 SDR_files/test_io/out_File
@@ -11,9 +10,6 @@ SDR_files/TX_RX/qpsk/ModulatedData.txt
 SDR_files/test_io/out_File
 SDR_files/test_io/out_image.png
 SDR_files/test_io/out_radio.wav
-test.txt
-
-
 
 SDR_files/temp
 SDR_files/board_interaction/calla.npy
@@ -23,5 +19,3 @@ SDR_files/test_io/out.png
 SDR_files/test_io/out_File
 SDR_files/test_io/out_File.tmp
 SDR_files/test_io/out_File.png
-
-mist_data/
