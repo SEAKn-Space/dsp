@@ -9,7 +9,6 @@ be the parameters. All of them are required to have default values!
 import numpy as np
 import random
 from gnuradio import gr
-import torch
 
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block - Randomly grab num_points samples and save to file or pass onto next block.
@@ -52,15 +51,20 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 if (len(input_items[0]) >= self.num_points):
                     start = random.randint(0, len(input_items[0])-self.num_points)
                     data = input_items[0][start:start+self.num_points]
-                    output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+                    # output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+                    data = blk.normalize_complex(data)
 
                     if self._debug:
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
-                    
+                        print("normalized data: ",data[:10])
+
+                    output_items[0][:len(data)] = data[:]
+
                     # save to file
                     if not self.save_file is None:
                         np.save(self.save_file, data, allow_pickle=True)
                     return len(data)
+
                 elif self._debug:
                     print("Input length is less than num_points")
             
@@ -75,37 +79,14 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 if (int(len(input_items[0])) >= int(self.num_points)):
                     start = random.randint(0, len(input_items[0])-self.num_points)
                     data = input_items[0][start:start+self.num_points]
-                    output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+                    # output_items[0][:len(data)] = input_items[0][start:start+self.num_points]
+                    data = blk.normalize_complex(data)
+
                     if self._debug:
                         print("Collected {} samples".format(len(data), type(input_items[0]), output_items[0][:] ))
-                    
-                    formated_data = np.vstack((data.real, data.imag))
-                    formated_data_torch = torch.from_numpy(formated_data)
-                    formated_data_tensor = torch.tensor(formated_data_torch, dtype=torch.float32)
-                    min_val = torch.tensor(formated_data_tensor.min(axis=1).values, dtype=torch.float32)
-                    max_val = torch.tensor(formated_data_tensor.max(axis=1).values, dtype=torch.float32)
+                        print("normalized data: ",data[:10])
 
-                    #normalize
-                    epsilon = 1e-10
-                    normalized_data = 2* (formated_data_tensor - min_val.unsqueeze(1)) / (max_val.unsqueeze(1) - min_val.unsqueeze(1) + epsilon) - 1
-                    normalized_data_np = normalized_data.numpy()
-                    
-                    # if self._debug:
-                    #     print(normalized_data_np.shape)
-                    #     print(normalized_data.shape)
-                    #     print(normalized_data_np[0:10])
-
-                    normalized_real = normalized_data_np[0]
-                    normalized_imag = normalized_data_np[1]
-
-                    n_data = np.zeros(self.num_points, dtype=np.complex64)
-                    for i in range(self.num_points):
-                        n_data[i] = complex(normalized_real[i], normalized_imag[i])
-                    
-                    if self._debug:
-                        print(n_data)
-
-                    output_items[0][:len(n_data)] = n_data[:]
+                    output_items[0][:len(data)] = data[:]
 
                     # save to file
                     if not self.save_file is None:
@@ -118,3 +99,23 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         return self.num_points
         # output_items[0][:self.num_points] = input_items[0][:self.num_points]
         # return (len(output_items[0]))
+
+    def normalize_complex(data):
+        real_part = np.real(data)
+        imag_part = np.imag(data)
+        
+        # Normalize real and imaginary parts separately
+        real_normalized = blk.normalize_to_minus_one_one(real_part)
+        imag_normalized = blk.normalize_to_minus_one_one(imag_part)
+        
+        # Combine real and imaginary parts into complex numbers
+        normalized_data = [complex(r, i) for r, i in zip(real_normalized, imag_normalized)]
+        # normalized_data = complex(real_normalized, imag_normalized)
+        return normalized_data
+    
+    def normalize_to_minus_one_one(data):
+        epsilon = 1e-10
+        min_val = min(data)
+        max_val = max(data)
+        normalized_data = [2 * ((x - min_val) / (max_val - min_val + epsilon)) - 1 for x in data]
+        return normalized_data
