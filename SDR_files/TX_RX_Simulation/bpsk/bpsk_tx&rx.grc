@@ -1196,7 +1196,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 172.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: orginal_EPB
   id: epy_block
   parameters:
@@ -1287,7 +1287,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 356.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:
@@ -2289,6 +2289,7 @@ connections:
 - [low_pass_filter_0, '0', analog_feedforward_agc_cc_0, '0']
 - [low_pass_filter_0, '0', qtgui_freq_sink_x_1_0, '0']
 - [low_pass_filter_0, '0', qtgui_time_sink_x_0, '0']
+- [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [rational_resampler_xxx_0, '0', blocks_throttle2_0, '0']
 - [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
