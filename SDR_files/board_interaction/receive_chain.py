@@ -35,8 +35,6 @@ from PyQt5 import QtCore
 from qpsk_demod import qpsk_demod  # grc-generated hier_block
 from xmlrpc.server import SimpleXMLRPCServer
 import threading
-import osmosdr
-import time
 import receive_chain_epy_block_0 as epy_block_0  # embedded python block
 import sip
 
@@ -94,7 +92,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.hackrf_rate = hackrf_rate = 20*samp_rate
         self.excess_bw = excess_bw = 0.35
-        self.demod_selector = demod_selector = 0
+        self.demod_selector = demod_selector = 1
         self.carrier_freq = carrier_freq = 0435e6
         self.bpsk = bpsk = digital.constellation_bpsk().base()
         self.bpsk.set_npwr(1.0)
@@ -112,6 +110,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
+        self.zeromq_sub_source_0 = zeromq.sub_source(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:49203', 100, False, (-1), '', False)
         self.zeromq_pub_sink_0_0 = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:100100', 100, False, (-1), '', True, True)
         self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:5050', 100, False, (-1), '', True, True)
         self.xmlrpc_server_0 = SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
@@ -134,23 +133,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(3, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.rtlsdr_source_0 = osmosdr.source(
-            args="numchan=" + str(1) + " " + ''
-        )
-        self.rtlsdr_source_0.set_clock_source('internal', 0)
-        self.rtlsdr_source_0.set_time_source('external', 0)
-        self.rtlsdr_source_0.set_time_unknown_pps(osmosdr.time_spec_t())
-        self.rtlsdr_source_0.set_sample_rate(rtl_rate)
-        self.rtlsdr_source_0.set_center_freq(carrier_freq, 0)
-        self.rtlsdr_source_0.set_freq_corr(0, 0)
-        self.rtlsdr_source_0.set_dc_offset_mode(2, 0)
-        self.rtlsdr_source_0.set_iq_balance_mode(2, 0)
-        self.rtlsdr_source_0.set_gain_mode(True, 0)
-        self.rtlsdr_source_0.set_gain(20, 0)
-        self.rtlsdr_source_0.set_if_gain(20, 0)
-        self.rtlsdr_source_0.set_bb_gain(20, 0)
-        self.rtlsdr_source_0.set_antenna('', 0)
-        self.rtlsdr_source_0.set_bandwidth(0, 0)
         self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=1,
                 decimation=((int)(rtl_rate/samp_rate)),
@@ -479,8 +461,8 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.connect((self.qpsk_demod_0, 0), (self.blocks_selector_1, 1))
         self.connect((self.qpsk_demod_0, 1), (self.blocks_selector_1_0, 1))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_multiply_xx_0_0, 0))
-        self.connect((self.rtlsdr_source_0, 0), (self.qtgui_freq_sink_x_1, 0))
-        self.connect((self.rtlsdr_source_0, 0), (self.rational_resampler_xxx_0, 0))
+        self.connect((self.zeromq_sub_source_0, 0), (self.qtgui_freq_sink_x_1, 0))
+        self.connect((self.zeromq_sub_source_0, 0), (self.rational_resampler_xxx_0, 0))
 
 
     def closeEvent(self, event):
@@ -555,7 +537,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.rtl_rate = rtl_rate
         self.analog_sig_source_x_0_0.set_sampling_freq((self.rtl_rate/10))
         self.qtgui_freq_sink_x_1.set_frequency_range(0, self.rtl_rate)
-        self.rtlsdr_source_0.set_sample_rate(self.rtl_rate)
 
     def get_rrc_taps(self):
         return self.rrc_taps
@@ -625,7 +606,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
 
     def set_carrier_freq(self, carrier_freq):
         self.carrier_freq = carrier_freq
-        self.rtlsdr_source_0.set_center_freq(self.carrier_freq, 0)
 
     def get_bpsk(self):
         return self.bpsk

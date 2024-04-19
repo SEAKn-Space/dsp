@@ -77,6 +77,7 @@ while True:
         else:
             # decode Base64
             data = base64.b64decode(buff)
+            print(data)
             f_out.write (data)
             continue
 

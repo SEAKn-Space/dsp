@@ -136,7 +136,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '0'
+    value: '1'
   states:
     bus_sink: false
     bus_source: false
@@ -1641,7 +1641,7 @@ blocks:
     bus_structure: null
     coordinate: [56, 388.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1748,7 +1748,7 @@ blocks:
     bus_structure: null
     coordinate: [48, 696.0]
     rotation: 0
-    state: disabled
+    state: enabled
 
 connections:
 - [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
