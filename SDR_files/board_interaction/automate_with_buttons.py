@@ -12,10 +12,10 @@ def button_press(tmp):
     choice = not(choice)
     if choice:
         print("Transmitting BPSK")
-        tranmit_bpsk
+        tranmit_bpsk()
     else:
         print("Transmitting QPSK")
-        tranmit_qpsk
+        tranmit_qpsk()
 
 
 # Run QPSK transmit
@@ -24,7 +24,7 @@ def tranmit_qpsk():
 
 # Run BPSK transmit
 def tranmit_bpsk():
-    subprocess.run(['python',  './SDR_files/TX_RX/bpsk/bpsk_tx_automated.py' ])
+    subprocess.run(['python',  './SDR_files/TX_RX/bpsk/bpsk_tx_automated.py' ]) 
 
 print("Press Button to Begin Transmission")
 print("Press Again to Toggle")
@@ -34,4 +34,4 @@ try:
         if keyboard.is_pressed('space'):
             keyboard.on_release_key('space',button_press,suppress=True)
 except KeyboardInterrupt:
-    print("Exiting")        
+    print("Exiting")            
