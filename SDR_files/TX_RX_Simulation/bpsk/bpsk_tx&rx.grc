@@ -547,7 +547,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '1'
+    initial_packet_fill: '10'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -1118,7 +1118,7 @@ blocks:
       )\n                print(\"Try Decreasing Input File Size or Increasing Minoutput\
       \ Buffer\")\n            return 0\n\n        if (self.state == 0):\n       \
       \     if (self._debug):\n                print(\"State 0\")\n            # idle\n\
-      \            return (0)\n\n        elif (self.state == 1):\n            # send\
+      \            return -1\n\n        elif (self.state == 1):\n            # send\
       \ preamble\n            if (self._debug):\n                print (\"State =\
       \ 1\", self.pre_count)\n            key1 = pmt.intern(\"packet_len\")\n    \
       \        val1 = pmt.from_long(self.c_len)\n            self.add_item_tag(0,\
@@ -1184,7 +1184,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: '128'
+    initial_packet_fill: '15'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -2249,6 +2249,28 @@ blocks:
     coordinate: [1672, 144.0]
     rotation: 0
     state: enabled
+- name: zeromq_pub_sink_0_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:100100
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2352, 880.0]
+    rotation: 0
+    state: enabled
 
 connections:
 - [EPB, '0', digital_crc32_bb_0, '0']
@@ -2280,6 +2302,7 @@ connections:
 - [digital_crc32_bb_0, '0', digital_protocol_formatter_bb_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_file_sink_0, '0']
 - [digital_crc32_bb_0_0, '0', blocks_repack_bits_bb_0_0_0, '0']
+- [digital_crc32_bb_0_0, '0', zeromq_pub_sink_0_0, '0']
 - [digital_diff_decoder_bb_0, '0', digital_map_bb_0, '0']
 - [digital_fll_band_edge_cc_0, '0', low_pass_filter_0, '0']
 - [digital_map_bb_0, '0', blocks_uchar_to_float_0_0, '0']
@@ -2289,6 +2312,7 @@ connections:
 - [low_pass_filter_0, '0', analog_feedforward_agc_cc_0, '0']
 - [low_pass_filter_0, '0', qtgui_freq_sink_x_1_0, '0']
 - [low_pass_filter_0, '0', qtgui_time_sink_x_0, '0']
+- [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [orginal_EPB, '0', digital_crc32_bb_0, '0']
 - [rational_resampler_xxx_0, '0', blocks_throttle2_0, '0']
 - [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']

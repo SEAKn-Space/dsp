@@ -872,7 +872,7 @@ blocks:
     comment: 'Filename is specified on the command line, e.g.:
 
       python3 pkt_xmt.py --InFile="../gr-logo.png"'
-    initial_packet_fill: ''
+    initial_packet_fill: '30'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -996,7 +996,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 188.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: orginal_EPB
   id: epy_block
   parameters:
@@ -1108,7 +1108,7 @@ blocks:
     bus_structure: null
     coordinate: [16, 300.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:

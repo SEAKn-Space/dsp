@@ -19,3 +19,7 @@ SDR_files/test_io/out.png
 SDR_files/test_io/out_File
 SDR_files/test_io/out_File.tmp
 SDR_files/test_io/out_File.png
+
+*.pyc
+received_image.png
+SDR_files/test_io/out_File

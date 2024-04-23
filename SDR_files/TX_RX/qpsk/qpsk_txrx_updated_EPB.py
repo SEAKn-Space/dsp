@@ -67,7 +67,7 @@ class blk(gr.sync_block):
             if (self._debug):
                 print("State 0")
             # idle
-            return -1
+            return (0)
 
         elif (self.state == 1):
             # send preamble
@@ -83,12 +83,18 @@ class blk(gr.sync_block):
             self.indx += self.c_len
             
             i = 0
-            while (i < self.c_len):
-                output_items[0][i] = self.char_list[i]
-                i += 1
-            
-            self.pre_count += 1
-            if (self.pre_count > self.initial_packet_fill):
+            j = 0
+            while(j<self.initial_packet_fill*self.c_len):
+                i = 0
+                while (i < self.c_len):
+                    output_items[0][j] = self.char_list[i]
+                    i += 1
+                    j += 1
+                
+                self.pre_count += 1
+
+
+            if (self.pre_count > 64):
                 self.pre_count = 0
                 self.state = 2      # send msg
             return (self.c_len)
@@ -129,7 +135,7 @@ class blk(gr.sync_block):
 
 
                 i = 0
-                while (i < len(encoded) and len(output_items[0])>=len(encoded)):
+                while (i < len(encoded)):
                     # if (i == 63):
                     #     print("i",encoded[i])
                     output_items[0][i] = encoded[i]

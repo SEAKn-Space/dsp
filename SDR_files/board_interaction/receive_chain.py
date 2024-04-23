@@ -92,7 +92,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.hdr_format = hdr_format = digital.header_format_default(access_key, 0)
         self.hackrf_rate = hackrf_rate = 20*samp_rate
         self.excess_bw = excess_bw = 0.35
-        self.demod_selector = demod_selector = 0
+        self.demod_selector = demod_selector = 1
         self.carrier_freq = carrier_freq = 0435e6
         self.bpsk = bpsk = digital.constellation_bpsk().base()
         self.bpsk.set_npwr(1.0)
@@ -110,6 +110,8 @@ class receive_chain(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
+        self.zeromq_sub_source_0 = zeromq.sub_source(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:49203', 100, False, (-1), '', False)
+        self.zeromq_pub_sink_0_0 = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:100100', 100, False, (-1), '', True, True)
         self.zeromq_pub_sink_0 = zeromq.pub_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:5050', 100, False, (-1), '', True, True)
         self.xmlrpc_server_0 = SimpleXMLRPCServer(('localhost', 8080), allow_none=True)
         self.xmlrpc_server_0.register_instance(self)
@@ -408,7 +410,7 @@ class receive_chain(gr.top_block, Qt.QWidget):
                 1.6E3,
                 window.WIN_HAMMING,
                 6.76))
-        self.epy_block_0 = epy_block_0.blk(save_file="calla.npy", num_points=2048, grab_random=False, rate=10_000, debug=True)
+        self.epy_block_0 = epy_block_0.blk(save_file=None, num_points=768, grab_random=False, rate=10_000, debug=False)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(15, .35, 44, 0.0628)
         self.bpsk_demod_1 = bpsk_demod(
             access_key='11100001010110101110100010010011',
@@ -432,7 +434,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.blocks_multiply_xx_0_0 = blocks.multiply_vcc(1)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\dsp\\SDR_files\\test_io\\out_File', False)
         self.blocks_file_sink_0.set_unbuffered(True)
-        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(rtl_rate, analog.GR_COS_WAVE, baseband_LO, 0.5, 0, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_rate/10), analog.GR_COS_WAVE, baseband_LO, 0.5, 0, 0)
 
 
@@ -440,12 +441,11 @@ class receive_chain(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_multiply_xx_0_0, 1))
-        self.connect((self.analog_sig_source_x_0_0_0, 0), (self.qtgui_freq_sink_x_1, 0))
-        self.connect((self.analog_sig_source_x_0_0_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_multiply_xx_0_0, 0), (self.digital_fll_band_edge_cc_0, 0))
         self.connect((self.blocks_repack_bits, 0), (self.blocks_uchar_to_float, 0))
         self.connect((self.blocks_selector_1, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.blocks_selector_1, 0), (self.blocks_repack_bits, 0))
+        self.connect((self.blocks_selector_1, 0), (self.zeromq_pub_sink_0_0, 0))
         self.connect((self.blocks_selector_1_0, 0), (self.qtgui_const_sink_x_0_0, 0))
         self.connect((self.blocks_selector_3, 0), (self.bpsk_demod_1, 0))
         self.connect((self.blocks_selector_3, 1), (self.qpsk_demod_0, 0))
@@ -461,6 +461,8 @@ class receive_chain(gr.top_block, Qt.QWidget):
         self.connect((self.qpsk_demod_0, 0), (self.blocks_selector_1, 1))
         self.connect((self.qpsk_demod_0, 1), (self.blocks_selector_1_0, 1))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_multiply_xx_0_0, 0))
+        self.connect((self.zeromq_sub_source_0, 0), (self.qtgui_freq_sink_x_1, 0))
+        self.connect((self.zeromq_sub_source_0, 0), (self.rational_resampler_xxx_0, 0))
 
 
     def closeEvent(self, event):
@@ -534,7 +536,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
     def set_rtl_rate(self, rtl_rate):
         self.rtl_rate = rtl_rate
         self.analog_sig_source_x_0_0.set_sampling_freq((self.rtl_rate/10))
-        self.analog_sig_source_x_0_0_0.set_sampling_freq(self.rtl_rate)
         self.qtgui_freq_sink_x_1.set_frequency_range(0, self.rtl_rate)
 
     def get_rrc_taps(self):
@@ -619,7 +620,6 @@ class receive_chain(gr.top_block, Qt.QWidget):
     def set_baseband_LO(self, baseband_LO):
         self.baseband_LO = baseband_LO
         self.analog_sig_source_x_0_0.set_frequency(self.baseband_LO)
-        self.analog_sig_source_x_0_0_0.set_frequency(self.baseband_LO)
 
     def get_MTU(self):
         return self.MTU

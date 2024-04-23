@@ -136,7 +136,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '0'
+    value: '1'
   states:
     bus_sink: false
     bus_source: false
@@ -333,22 +333,6 @@ blocks:
     coordinate: [1440, 4.0]
     rotation: 0
     state: true
-- name: variable_qtgui_label_0
-  id: variable_qtgui_label
-  parameters:
-    comment: ''
-    formatter: None
-    gui_hint: 0,2,1,1
-    label: ''
-    type: bool
-    value: demod_selector
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1760, 372.0]
-    rotation: 0
-    state: disabled
 - name: variable_qtgui_label_1
   id: variable_qtgui_label
   parameters:
@@ -410,7 +394,7 @@ blocks:
     bus_structure: null
     coordinate: [72, 200.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_file_sink_0
   id: blocks_file_sink
   parameters:
@@ -426,7 +410,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1216, 892.0]
+    coordinate: [1232, 892.0]
     rotation: 0
     state: true
 - name: blocks_file_sink_0_0
@@ -622,12 +606,13 @@ blocks:
       import random\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):  # other\
       \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
       \ Python Block - Randomly grab num_points samples and save to file or pass onto\
-      \ next block.\n    Args:\n        save_file (str): File to save samples to.\n\
-      \        num_points (int): Number of samples to grab. Ex: 128. Must be less\
-      \ than or equal to the number of samples in the input (4096).\n        grab_random\
-      \ (bool): If True, grab samples randomly. If False, grab samples sequentially\
-      \ at given rate.\n        rate (int): Rate at which to grab samples. Higher\
-      \ rate means longer time between grabbing samples.\"\"\"\n\n    def __init__(self,\
+      \ next block.\n    Args:\n        save_file (str): File to save samples to.\
+      \ Set to None to not save to file.\n        num_points (int): Number of samples\
+      \ to grab. Ex: 128. Must be less than or equal to the number of samples in the\
+      \ input (4096).\n        grab_random (bool): If True, grab samples randomly.\
+      \ If False, grab samples sequentially at given rate.\n        rate (int): Rate\
+      \ at which to grab samples. Higher rate means longer time between grabbing samples.\n\
+      \        debug (bool): If True, print debug messages.\"\"\"\n\n    def __init__(self,\
       \ save_file=\"calla.np\", num_points=128, grab_random=False, rate=10_000,debug=False):\
       \  # only default arguments here\n        \"\"\"arguments to this function show\
       \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
@@ -635,9 +620,9 @@ blocks:
       \           in_sig=[np.complex64],\n            out_sig=[np.complex64]\n   \
       \     )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.save_file\
-      \ = save_file \n        self.num_points = num_points\n        self.iter_counts\
-      \ = 0\n        self.grab_random = grab_random\n        self.rate = rate\n  \
-      \      self._debug = debug\n\n    def work(self, input_items, output_items):\n\
+      \ = save_file \n        self.num_points = num_points\n        self.grab_random\
+      \ = grab_random\n        self.rate = rate\n        self._debug = debug\n\n \
+      \       self.iter_counts = 0\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"Grab num_points samples and save to file or pass onto next block.\"\
       \"\"\n\n        if (input_items is None or len(input_items[0]) is None or input_items[0]\
       \ is None):\n            print(\"Input type is None\")\n            return 0\n\
@@ -646,12 +631,15 @@ blocks:
       \               if (len(input_items[0]) >= self.num_points):\n             \
       \       start = random.randint(0, len(input_items[0])-self.num_points)\n   \
       \                 data = input_items[0][start:start+self.num_points]\n     \
-      \               output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
-      \n                    if self._debug:\n                        print(\"Collected\
-      \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
-      \                    \n                    # save to file\n                \
-      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
-      \ len(data)\n                elif self._debug:\n                    print(\"\
+      \               # output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
+      \                    data = blk.normalize_complex(data)\n\n                \
+      \    if self._debug:\n                        print(\"Collected {} samples\"\
+      .format(len(data), type(input_items[0]), output_items[0][:] ))\n           \
+      \             print(\"normalized data: \",data[:10])\n\n                   \
+      \ output_items[0][:len(data)] = data[:]\n\n                    # save to file\n\
+      \                    if not self.save_file is None:\n                      \
+      \  np.save(self.save_file, data, allow_pickle=True)\n                    return\
+      \ len(data)\n\n                elif self._debug:\n                    print(\"\
       Input length is less than num_points\")\n            \n        else:\n     \
       \       self.iter_counts += 1\n            if (self.iter_counts >= self.rate):\n\
       \n                self.iter_counts = 0\n                if self._debug:\n  \
@@ -659,36 +647,51 @@ blocks:
       \         if (int(len(input_items[0])) >= int(self.num_points)):\n         \
       \           start = random.randint(0, len(input_items[0])-self.num_points)\n\
       \                    data = input_items[0][start:start+self.num_points]\n  \
-      \                  output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
-      \                    if self._debug:\n                        print(\"Collected\
-      \ {} samples\".format(len(data), type(input_items[0]), output_items[0][:] ))\n\
-      \                    \n                    # save to file\n                \
-      \    np.save(self.save_file, data, allow_pickle=True)\n                    return\
+      \                  # output_items[0][:len(data)] = input_items[0][start:start+self.num_points]\n\
+      \                    data = blk.normalize_complex(data)\n\n                \
+      \    if self._debug:\n                        print(\"Collected {} samples\"\
+      .format(len(data), type(input_items[0]), output_items[0][:] ))\n           \
+      \             print(\"normalized data: \",data[:10])\n\n                   \
+      \ output_items[0][:len(data)] = data[:]\n\n                    # save to file\n\
+      \                    if not self.save_file is None:\n                      \
+      \  np.save(self.save_file, data, allow_pickle=True)\n                    return\
       \ len(data)\n                elif self._debug:\n                    print(\"\
       Input length is less than num_points\")\n\n        output_items[0][:] = 0\n\
       \        return self.num_points\n        # output_items[0][:self.num_points]\
-      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))"
+      \ = input_items[0][:self.num_points]\n        # return (len(output_items[0]))\n\
+      \n    def normalize_complex(data):\n        real_part = np.real(data)\n    \
+      \    imag_part = np.imag(data)\n        \n        # Normalize real and imaginary\
+      \ parts separately\n        real_normalized = blk.normalize_to_minus_one_one(real_part)\n\
+      \        imag_normalized = blk.normalize_to_minus_one_one(imag_part)\n     \
+      \   \n        # Combine real and imaginary parts into complex numbers\n    \
+      \    normalized_data = [complex(r, i) for r, i in zip(real_normalized, imag_normalized)]\n\
+      \        # normalized_data = complex(real_normalized, imag_normalized)\n   \
+      \     return normalized_data\n    \n    def normalize_to_minus_one_one(data):\n\
+      \        epsilon = 1e-10\n        min_val = min(data)\n        max_val = max(data)\n\
+      \        normalized_data = [2 * ((x - min_val) / (max_val - min_val + epsilon))\
+      \ - 1 for x in data]\n        return normalized_data"
     affinity: ''
     alias: ''
     comment: ''
-    debug: 'True'
+    debug: 'False'
     grab_random: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_points: '2048'
+    num_points: '768'
     rate: '10_000'
-    save_file: '"calla.npy"'
+    save_file: None
   states:
     _io_cache: '(''Get Random Sample'', ''blk'', [(''save_file'', "''calla.np''"),
       (''num_points'', ''128''), (''grab_random'', ''False''), (''rate'', ''10000''),
       (''debug'', ''False'')], [(''0'', ''complex'', 1)], [(''0'', ''complex'', 1)],
       ''Embedded Python Block - Randomly grab num_points samples and save to file
       or pass onto next block.\n    Args:\n        save_file (str): File to save samples
-      to.\n        num_points (int): Number of samples to grab. Ex: 128. Must be less
-      than or equal to the number of samples in the input (4096).\n        grab_random
-      (bool): If True, grab samples randomly. If False, grab samples sequentially
-      at given rate.\n        rate (int): Rate at which to grab samples. Higher rate
-      means longer time between grabbing samples.'', [''grab_random'', ''num_points'',
+      to. Set to None to not save to file.\n        num_points (int): Number of samples
+      to grab. Ex: 128. Must be less than or equal to the number of samples in the
+      input (4096).\n        grab_random (bool): If True, grab samples randomly. If
+      False, grab samples sequentially at given rate.\n        rate (int): Rate at
+      which to grab samples. Higher rate means longer time between grabbing samples.\n        debug
+      (bool): If True, print debug messages.'', [''grab_random'', ''num_points'',
       ''rate'', ''save_file''])'
     bus_sink: false
     bus_source: false
@@ -734,45 +737,6 @@ blocks:
     bus_structure: null
     coordinate: [1632, 840.0]
     rotation: 180
-    state: disabled
-- name: epy_block_1
-  id: epy_block
-  parameters:
-    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
-      \ GRC will instantiate the first class it finds\nto get ports and parameters\
-      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
-      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
-      from gnuradio import gr\nimport pmt\nimport time\n\nclass blk(gr.sync_block):\
-      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
-      \"'Demodulation Scheme Select From Board'\"\"\"\n\n    def __init__(self, demod_selector=True):\
-      \  # only default arguments here\n        \"\"\"'Demodulation Scheme Select\
-      \ From Board'\"\"\"\n        gr.sync_block.__init__(\n            self,\n  \
-      \          name='Demodulation Scheme Select From Board',   # will show up in\
-      \ GRC\n            in_sig=None,\n            out_sig=None\n        )\n     \
-      \   # if an attribute with the same name as a parameter is found,\n        #\
-      \ a callback is registered (properties work, too).\n        self.portName =\
-      \ \"demod_select\"\n        self.message_port_register_out(pmt.intern(self.portName))\n\
-      \n        self.demod_selector = demod_selector\n\n    def work(self, input_items,\
-      \ output_items):\n        \n        print(\"Random number: \", rand)\n     \
-      \   rand = np.random.randint(2)\n        time.sleep(0.1)\n        self.demod_selector\
-      \ = rand\n        PMT_msg = pmt.from_bool(self.rand)\n        self.message_port_pub(pmt.intern(self.portName),\
-      \ PMT_msg)\n\n        return (input_items[0])\n\n    # def handle_msg(self,\
-      \ msg):\n    #     self.selector = pmt.to_bool(msg)"
-    affinity: ''
-    alias: ''
-    comment: ''
-    demod_selector: demod_selector
-    maxoutbuf: '0'
-    minoutbuf: '0'
-  states:
-    _io_cache: ('Demodulation Scheme Select From Board', 'blk', [('demod_selector',
-      'True')], [], [('demod_select', 'message', 1)], "'Demodulation Scheme Select
-      From Board'", ['demod_selector'])
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [512, 652.0]
-    rotation: 0
     state: disabled
 - name: low_pass_filter_0
   id: low_pass_filter
@@ -1107,28 +1071,6 @@ blocks:
     coordinate: [1312, 184.0]
     rotation: 0
     state: true
-- name: qtgui_ledindicator_0
-  id: qtgui_ledindicator
-  parameters:
-    affinity: ''
-    alias: ''
-    cellalignment: '1'
-    comment: ''
-    gui_hint: 0,2,1,1
-    label: 'Demodulation Scheme Selected: (Red=BPSK, Green=QPSK)'
-    maxSize: '100'
-    offColor: red
-    onColor: green
-    position: '1'
-    state: demod_selector
-    verticalalignment: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1736, 268.0]
-    rotation: 0
-    state: disabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -1762,6 +1704,28 @@ blocks:
     coordinate: [1536, 408.0]
     rotation: 0
     state: enabled
+- name: zeromq_pub_sink_0_0
+  id: zeromq_pub_sink
+  parameters:
+    address: tcp://127.0.0.1:100100
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    drop_on_hwm: 'True'
+    hwm: '-1'
+    key: ''
+    pass_tags: 'False'
+    timeout: '100'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1904, 680.0]
+    rotation: 0
+    state: enabled
 - name: zeromq_sub_source_0
   id: zeromq_sub_source
   parameters:
@@ -1784,7 +1748,7 @@ blocks:
     bus_structure: null
     coordinate: [48, 696.0]
     rotation: 0
-    state: disabled
+    state: enabled
 
 connections:
 - [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
@@ -1795,6 +1759,7 @@ connections:
 - [blocks_selector_1, '0', blocks_file_sink_0, '0']
 - [blocks_selector_1, '0', blocks_repack_bits, '0']
 - [blocks_selector_1, '0', pdu_tagged_stream_to_pdu_0_0, '0']
+- [blocks_selector_1, '0', zeromq_pub_sink_0_0, '0']
 - [blocks_selector_1_0, '0', qtgui_const_sink_x_0_0, '0']
 - [blocks_selector_3, '0', bpsk_demod_1, '0']
 - [blocks_selector_3, '1', qpsk_demod_0, '0']

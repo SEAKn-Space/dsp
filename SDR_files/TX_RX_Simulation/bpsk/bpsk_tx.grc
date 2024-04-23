@@ -308,7 +308,7 @@ blocks:
 - name: epy_block_0
   id: epy_block
   parameters:
-    FileName: '"C:/Users/natha/OneDrive - Colorado School of Mines/Senior Design/GNU_radio/test_io/test.jpg"'
+    FileName: '"../../test_io/QPSK.png"'
     Pkt_len: '60'
     _source_code: "\"\"\"\nEmbedded Python Block: File Source to Tagged Stream\n\"\
       \"\"\n\nimport numpy as np\nfrom gnuradio import gr\nimport time\nimport pmt\n\
