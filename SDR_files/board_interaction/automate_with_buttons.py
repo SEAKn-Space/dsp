@@ -12,10 +12,10 @@ def button_press(tmp):
     choice = not(choice)
     if choice:
         print("Transmitting BPSK")
-        tranmit_bpsk
+        tranmit_bpsk()
     else:
         print("Transmitting QPSK")
-        tranmit_qpsk
+        tranmit_qpsk()
 
 
 # Run QPSK transmit
