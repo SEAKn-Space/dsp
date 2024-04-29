@@ -7,9 +7,8 @@
 # GNU Radio Python Flow Graph
 # Title: qpsk_rx
 # Description: packet receive
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import analog
@@ -56,10 +55,9 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "qpsk_rx")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -72,6 +70,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.sps = sps = 4
         self.samp_rate = samp_rate = 48000
         self.qpsk = qpsk = digital.constellation_qpsk().base()
+        self.qpsk.set_npwr(1.0)
         self.phase_bw = phase_bw = 0.25132741228
         self.hdr_format = hdr_format = digital.header_format_default(access_key,0)
         self.excess_bw = excess_bw = 0.35
@@ -328,7 +327,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
             firdes.low_pass(
                 1,
                 samp_rate,
-                10_000,
+                15_000,
                 1_600,
                 window.WIN_HAMMING,
                 6.76))
@@ -356,7 +355,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
         self.blocks_uchar_to_float_0_0 = blocks.uchar_to_float()
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_repack_bits_bb_1_0 = blocks.repack_bits_bb(1, 8, "packet_len", False, gr.GR_MSB_FIRST)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "../../test_io/out_File", False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1.0, 3.0)
 
@@ -419,6 +418,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
 
     def set_sps(self, sps):
         self.sps = sps
+        self.digital_symbol_sync_xx_0.set_sps(self.sps)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -426,7 +426,7 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.blocks_throttle2_0.set_sample_rate(self.samp_rate)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 10_000, 1_600, window.WIN_HAMMING, 6.76))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 15_000, 1_600, window.WIN_HAMMING, 6.76))
         self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_2.set_samp_rate(self.samp_rate)
@@ -469,9 +469,6 @@ class qpsk_rx(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=qpsk_rx, options=None):
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()

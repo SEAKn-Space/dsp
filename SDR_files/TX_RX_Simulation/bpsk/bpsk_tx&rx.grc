@@ -948,7 +948,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 252.0]
+    coordinate: [352, 252.0]
     rotation: 0
     state: true
 - name: digital_crc32_bb_0_0
@@ -2270,7 +2270,7 @@ blocks:
     bus_structure: null
     coordinate: [2352, 880.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
 - [EPB, '0', digital_crc32_bb_0, '0']

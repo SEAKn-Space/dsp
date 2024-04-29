@@ -628,7 +628,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_MSB_FIRST)
         self.blocks_multiply_xx_0_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "../../test_io/out_File", False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_float*1, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c((rtl_samp_rate/10), analog.GR_COS_WAVE, (-30_000), 0.5, 0, 0)

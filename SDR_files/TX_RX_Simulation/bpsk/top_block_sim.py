@@ -24,7 +24,6 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import zeromq
 import sip
 import top_block_sim_orginal_EPB as orginal_EPB  # embedded python block
 
@@ -83,7 +82,6 @@ class top_block_sim(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.zeromq_pub_sink_0_0 = zeromq.pub_sink(gr.sizeof_char, 1, 'tcp://127.0.0.1:100100', 100, False, (-1), '', True, True)
         self.rational_resampler_xxx_1_0 = filter.rational_resampler_ccc(
                 interpolation=1,
                 decimation=2,
@@ -642,7 +640,6 @@ class top_block_sim(gr.top_block, Qt.QWidget):
         self.connect((self.digital_crc32_bb_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.digital_crc32_bb_0_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.digital_crc32_bb_0_0, 0), (self.blocks_repack_bits_bb_0_0_0, 0))
-        self.connect((self.digital_crc32_bb_0_0, 0), (self.zeromq_pub_sink_0_0, 0))
         self.connect((self.digital_diff_decoder_bb_0, 0), (self.digital_map_bb_0, 0))
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.low_pass_filter_0, 0))
         self.connect((self.digital_map_bb_0, 0), (self.blocks_uchar_to_float_0_0, 0))

@@ -100,6 +100,7 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -187,7 +188,7 @@ blocks:
     alias: ''
     append: 'False'
     comment: ''
-    file: C:\Users\natha\OneDrive - Colorado School of Mines\Senior Design\GNU_radio\test_io\out_File
+    file: '"../../test_io/out_File"'
     type: byte
     unbuffered: 'True'
     vlen: '1'
@@ -1022,4 +1023,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.7.0
+  grc_version: 3.10.8.0

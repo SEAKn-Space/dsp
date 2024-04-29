@@ -349,7 +349,7 @@ class bpsk_rx(gr.top_block, Qt.QWidget):
         self.blocks_throttle2_1 = blocks.throttle( gr.sizeof_gr_complex*1, usrp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * usrp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_repack_bits_bb_1_0 = blocks.repack_bits_bb(1, 8, "packet_len", False, gr.GR_MSB_FIRST)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "../../test_io/out_File", False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1.0, 2.0)
 

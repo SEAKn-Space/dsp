@@ -7,9 +7,8 @@
 # GNU Radio Python Flow Graph
 # Title: 8psk_rx
 # Description: packet receive
-# GNU Radio version: 3.10.7.0
+# GNU Radio version: 3.10.8.0
 
-from packaging.version import Version as StrictVersion
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import analog
@@ -56,10 +55,9 @@ class eight_psk_rx(gr.top_block, Qt.QWidget):
         self.settings = Qt.QSettings("GNU Radio", "eight_psk_rx")
 
         try:
-            if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-                self.restoreGeometry(self.settings.value("geometry").toByteArray())
-            else:
-                self.restoreGeometry(self.settings.value("geometry"))
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
         except BaseException as exc:
             print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
 
@@ -72,7 +70,8 @@ class eight_psk_rx(gr.top_block, Qt.QWidget):
         self.sps = sps = 4
         self.samp_rate = samp_rate = 48000
         self.qpsk = qpsk = digital.constellation_8psk().base()
-        self.phase_bw = phase_bw = 0.50265482457
+        self.qpsk.set_npwr(1.0)
+        self.phase_bw = phase_bw = 0.25132741228
         self.hdr_format = hdr_format = digital.header_format_default(access_key,0)
         self.excess_bw = excess_bw = 0.1
         self.MTU = MTU = 1500
@@ -356,7 +355,7 @@ class eight_psk_rx(gr.top_block, Qt.QWidget):
         self.blocks_uchar_to_float_0_0 = blocks.uchar_to_float()
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_repack_bits_bb_1_0 = blocks.repack_bits_bb(1, 8, "packet_len", False, gr.GR_MSB_FIRST)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, 'C:\\Users\\natha\\OneDrive - Colorado School of Mines\\Senior Design\\GNU_radio\\test_io\\out_File', False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_char*1, "../../test_io/out_File", False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1.0, 3.0)
 
@@ -419,6 +418,7 @@ class eight_psk_rx(gr.top_block, Qt.QWidget):
 
     def set_sps(self, sps):
         self.sps = sps
+        self.digital_symbol_sync_xx_0.set_sps(self.sps)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -469,9 +469,6 @@ class eight_psk_rx(gr.top_block, Qt.QWidget):
 
 def main(top_block_cls=eight_psk_rx, options=None):
 
-    if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
-        style = gr.prefs().get_string('qtgui', 'style', 'raster')
-        Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
     tb = top_block_cls()
