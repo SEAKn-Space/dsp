@@ -45,3 +45,13 @@ The transmit side is intented to be run with the HackRF One connected to the com
 #### Receive Side
 
 The receive side is intended to be run with a RTL-SDR connected to the computer. The receive side is a GNU Radio flowgraph that makes an output file that will be send to the board. The flowgraph also takes is a message from the board to switch between demodulation BPSK or QPSK.
+
+# Connecting Everything Together
+
+This project was intended to have the AI model run on the Versal VCK190 using the onboard AI cores. The intended goal of everything working together was to have a seperate computer be able to send a BPSK or QPSK signal. That signal could then be received by the other SDR and sent to the board or AI model to determine how the signal should be demodulated. 
+
+## Transmit Side
+
+The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "c:/Users/name/dsp/SDR_files/board_interaction/automate_send&receive.py"`. Make sure to change name in the filepath to the correct user.
+
+## Receive Side
