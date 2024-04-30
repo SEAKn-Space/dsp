@@ -52,10 +52,25 @@ This project was intended to have the AI model run on the Versal VCK190 using th
 
 ## Transmit Side
 
-After installing GNU Radio, a radio conda python instance should have been installed. This python environment is required to be run to include any GNU Radio blocks or flowgraphs to be run in the terminal. On Windows the default install location is `"C:/Users/user/radioconda/python.exe"`. The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "c:/Users/name/dsp/SDR_files/board_interaction/automate_send&receive.py"`. Make sure to change name in the filepath to the correct user.
+After installing GNU Radio, a radio conda python instance should have been installed. This python environment is required to be run to include any GNU Radio blocks or flowgraphs to be run in the terminal. On Windows the default install location is `"C:/Users/user/radioconda/python.exe"`. The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "./SDR_files/board_interaction/automate_send&receive.py"` from the dsp parent directory. Make sure to change name in the filepath to the correct user.
 
 A seperate file called `automate_with_buttons.py` was also created in the same board_interaction folder that can toggle between transmitting BPSK or QPSK signals using a push button. 
 
 *Before running either script on a new computer with GNU Radio make sure to generate `bpsk_tx_automated.grc` and `qpsk_tx_automated.grc` found in the RX_TX folder or the script will fail to transmit.*
 
 ## Receive Side
+
+#### Computer Side
+
+A RTL-SDR is intened to be connected to receive the transmit signal. The RTL-SDR should then be connected to a computer with GNU Radio installed. The computer should be connected to the board via an ethernet switch, which will be used to communicate between the board and the computer. The computer can then run `receive_chain.grc`. Within the flowchart there are two zmq socket blocks that will need to be modified to the computer's host IP.
+
+![socket](https://github.com/SEAKn-Space/dsp/assets/125313875/d87a50a6-29d0-4d40-be15-049892a6ed49)
+
+![image](https://github.com/SEAKn-Space/dsp/assets/125313875/a82f696e-28f6-472b-953a-57e6a955ee37)
+
+There is one additional zmq socket block that can be kept as localhost (127.0.0.1). This block is intended to send the demodulated binary data to the `receive&display_message.py` script. This script will take the incomming binary data, strip the pre and post amble, and then try to display the image or print out the binary data received if an image cannot be opened.
+
+![socket2](https://github.com/SEAKn-Space/dsp/assets/125313875/4a22abca-1908-4e54-aa64-a5e2869b1f23)
+
+#### Board Side
+
