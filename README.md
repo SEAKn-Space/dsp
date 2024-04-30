@@ -66,7 +66,7 @@ A RTL-SDR is intended to be connected to receive the transmitted signal. The RTL
 
 ![socket](https://github.com/SEAKn-Space/dsp/assets/125313875/d87a50a6-29d0-4d40-be15-049892a6ed49)
 
-![image](https://github.com/SEAKn-Space/dsp/assets/125313875/a82f696e-28f6-472b-953a-57e6a955ee37)
+![socket1](https://github.com/SEAKn-Space/dsp/assets/125313875/cb271b5a-5664-4bcc-98eb-d24f6cf0bf2b)
 
 There is one additional zmq socket block that can be kept as localhost (127.0.0.1). This block is intended to send the demodulated binary data to the `receive&display_message.py` script. This script will take the incoming binary data, strip the pre and post amble, and then try to display the image or print out the binary data received if an image cannot be opened.
 
