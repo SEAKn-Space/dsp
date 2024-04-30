@@ -56,6 +56,6 @@ After installing GNU Radio, a radio conda python instance should have been insta
 
 A seperate file called `automate_with_buttons.py` was also created in the same board_interaction folder that can toggle between transmitting BPSK or QPSK signals using a push button. 
 
-**Before running either script on a new computer with GNU Radio make sure to generate `bpsk_tx_automated.grc` and `qpsk_tx_automated.grc` found in the RX_TX folder or the script will fail to transmit.**
+*Before running either script on a new computer with GNU Radio make sure to generate `bpsk_tx_automated.grc` and `qpsk_tx_automated.grc` found in the RX_TX folder or the script will fail to transmit.*
 
 ## Receive Side
