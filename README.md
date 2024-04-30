@@ -8,7 +8,9 @@ Within this realm you can find source files for both our AI model and interactin
 
 The main objective of our AI model is to be given complex data either directly from the SDR or from a data file and determine the modulation scheme used in that RF signal. 
 
-The AI model currently uses a Convolution Neural Network (CNN) to determine the current if the current modulation scheme is either a BPSK or QPSK signal. On going progress to improve this model and potentiall add more modulation schemes to determine between.  
+The AI model uses a Convolution Neural Network (CNN) to determine the if the current modulation scheme of the signal is either a BPSK or QPSK signal. 
+
+Additional documention on the AI model can be found in the Teams `Standard Work` folder.
 
 ## SDR files
 
