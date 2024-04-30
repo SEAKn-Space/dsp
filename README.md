@@ -52,6 +52,10 @@ This project was intended to have the AI model run on the Versal VCK190 using th
 
 ## Transmit Side
 
-The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "c:/Users/name/dsp/SDR_files/board_interaction/automate_send&receive.py"`. Make sure to change name in the filepath to the correct user.
+After installing GNU Radio, a radio conda python instance should have been installed. This python environment is required to be run to include any GNU Radio blocks or flowgraphs to be run in the terminal. On Windows the default install location is `"C:/Users/user/radioconda/python.exe"`. The transmit side is intented to be run with the HackRF One connected to the computer. The automate_send&receive.py script is made to be run in a terminal and can run GNU Radio subprocesses that transmits either BPSK or QPSK. The script can continuously send either modulation scheme. To run the python script the following command can be run: `C:/Users/name/radioconda/python.exe "c:/Users/name/dsp/SDR_files/board_interaction/automate_send&receive.py"`. Make sure to change name in the filepath to the correct user.
+
+A seperate file called `automate_with_buttons.py` was also created in the same board_interaction folder that can toggle between transmitting BPSK or QPSK signals using a push button. 
+
+**Before running either script on a new computer with GNU Radio make sure to generate `bpsk_tx_automated.grc` and `qpsk_tx_automated.grc` found in the RX_TX folder or the script will fail to transmit.**
 
 ## Receive Side
