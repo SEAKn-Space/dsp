@@ -62,13 +62,13 @@ A seperate file called `automate_with_buttons.py` was also created in the same b
 
 #### Computer Side
 
-A RTL-SDR is intened to be connected to receive the transmit signal. The RTL-SDR should then be connected to a computer with GNU Radio installed. The computer should be connected to the board via an ethernet switch, which will be used to communicate between the board and the computer. The computer can then run `receive_chain.grc`. Within the flowchart there are two zmq socket blocks that will need to be modified to the computer's host IP.
+A RTL-SDR is intended to be connected to receive the transmitted signal. The RTL-SDR should then be connected to a computer with GNU Radio installed. The computer should be connected to the board via an ethernet switch, which will be used to communicate between the board and the computer. The computer can then run `receive_chain.grc`. Within the flowchart there are two zmq socket blocks that will need to be modified to the computer's host IP.
 
 ![socket](https://github.com/SEAKn-Space/dsp/assets/125313875/d87a50a6-29d0-4d40-be15-049892a6ed49)
 
 ![image](https://github.com/SEAKn-Space/dsp/assets/125313875/a82f696e-28f6-472b-953a-57e6a955ee37)
 
-There is one additional zmq socket block that can be kept as localhost (127.0.0.1). This block is intended to send the demodulated binary data to the `receive&display_message.py` script. This script will take the incomming binary data, strip the pre and post amble, and then try to display the image or print out the binary data received if an image cannot be opened.
+There is one additional zmq socket block that can be kept as localhost (127.0.0.1). This block is intended to send the demodulated binary data to the `receive&display_message.py` script. This script will take the incoming binary data, strip the pre and post amble, and then try to display the image or print out the binary data received if an image cannot be opened.
 
 ![socket2](https://github.com/SEAKn-Space/dsp/assets/125313875/4a22abca-1908-4e54-aa64-a5e2869b1f23)
 
