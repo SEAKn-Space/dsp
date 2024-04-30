@@ -48,7 +48,7 @@ The receive side is intended to be run with a RTL-SDR connected to the computer.
 
 # Putting Everything Together
 
-This project was intended to have the AI model run on the Versal VCK190 using the onboard AI cores. The intended goal of everything working together was to have a seperate computer be able to send a BPSK or QPSK signal. That signal could then be received by the other SDR and sent to the board or AI model to determine how the signal should be demodulated. 
+This project was intended to have the AI model run on the Versal VCK190 using the onboard AI cores. The intended goal of everything working together was to have a seperate computer be able to send a BPSK or QPSK signal. That signal could then be received by another SDR and sent to the board or AI model to determine how the signal should be demodulated. 
 
 ## Transmit Side
 
