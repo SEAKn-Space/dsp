@@ -74,3 +74,5 @@ There is one additional zmq socket block that can be kept as localhost (127.0.0.
 
 #### Board Side
 
+Several steps were taken to transfer the AI model to the board, in which a more detailed instructions can be found located in the Teams `Standard Work` folder.
+
